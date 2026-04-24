@@ -17,6 +17,7 @@ import (
 func main() {
 	configPath := flag.String("config", "configs/paper.yaml", "Config file path")
 	capital := flag.Float64("capital", 10000.0, "Initial capital in USDT")
+	staticDir := flag.String("static", "", "Static files directory for dashboard")
 	flag.Parse()
 
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
@@ -43,7 +44,7 @@ func main() {
 	}
 	defer eng.Close()
 
-	server := api.NewServer(eng)
+	server := api.NewServer(eng, *staticDir)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

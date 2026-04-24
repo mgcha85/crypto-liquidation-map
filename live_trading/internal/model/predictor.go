@@ -9,7 +9,8 @@ import (
 type Predictor struct {
 	session *ort.AdvancedSession
 	input   *ort.Tensor[float32]
-	output  *ort.Tensor[float32]
+	label   *ort.Tensor[int64]
+	probs   *ort.Tensor[float32]
 }
 
 func NewPredictor(modelPath string) (*Predictor, error) {
@@ -24,18 +25,24 @@ func NewPredictor(modelPath string) (*Predictor, error) {
 		return nil, fmt.Errorf("failed to create input tensor: %w", err)
 	}
 
-	outputShape := ort.NewShape(1, 2)
-	output, err := ort.NewEmptyTensor[float32](outputShape)
+	labelShape := ort.NewShape(1)
+	label, err := ort.NewEmptyTensor[int64](labelShape)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create output tensor: %w", err)
+		return nil, fmt.Errorf("failed to create label tensor: %w", err)
+	}
+
+	probsShape := ort.NewShape(1, 2)
+	probs, err := ort.NewEmptyTensor[float32](probsShape)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create probs tensor: %w", err)
 	}
 
 	session, err := ort.NewAdvancedSession(
 		modelPath,
 		[]string{"input"},
-		[]string{"output"},
+		[]string{"label", "probabilities"},
 		[]ort.ArbitraryTensor{input},
-		[]ort.ArbitraryTensor{output},
+		[]ort.ArbitraryTensor{label, probs},
 		nil,
 	)
 	if err != nil {
@@ -45,7 +52,8 @@ func NewPredictor(modelPath string) (*Predictor, error) {
 	return &Predictor{
 		session: session,
 		input:   input,
-		output:  output,
+		label:   label,
+		probs:   probs,
 	}, nil
 }
 
@@ -64,15 +72,16 @@ func (p *Predictor) Predict(features []float64) (int, float64, error) {
 		return 0, 0, fmt.Errorf("inference failed: %w", err)
 	}
 
-	outputData := p.output.GetData()
+	labelData := p.label.GetData()
+	probsData := p.probs.GetData()
 
-	prob0 := float64(outputData[0])
-	prob1 := float64(outputData[1])
+	pred := int(labelData[0])
+	confidence := float64(probsData[pred])
 
-	if prob1 > prob0 {
-		return 1, prob1, nil
+	if pred == 1 {
+		return 1, confidence, nil
 	}
-	return -1, prob0, nil
+	return -1, confidence, nil
 }
 
 func (p *Predictor) Close() error {

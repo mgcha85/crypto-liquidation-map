@@ -3,6 +3,8 @@ package api
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -11,27 +13,33 @@ import (
 )
 
 type Server struct {
-	engine *engine.Engine
-	router *mux.Router
+	engine    *engine.Engine
+	router    *mux.Router
+	staticDir string
 }
 
-func NewServer(eng *engine.Engine) *Server {
+func NewServer(eng *engine.Engine, staticDir string) *Server {
 	s := &Server{
-		engine: eng,
-		router: mux.NewRouter(),
+		engine:    eng,
+		router:    mux.NewRouter(),
+		staticDir: staticDir,
 	}
 	s.setupRoutes()
 	return s
 }
 
 func (s *Server) setupRoutes() {
-	s.router.HandleFunc("/status", s.handleStatus).Methods("GET")
-	s.router.HandleFunc("/trades", s.handleTrades).Methods("GET")
-	s.router.HandleFunc("/metrics", s.handleMetrics).Methods("GET")
-	s.router.HandleFunc("/start", s.handleStart).Methods("POST")
-	s.router.HandleFunc("/stop", s.handleStop).Methods("POST")
+	api := s.router.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/status", s.handleStatus).Methods("GET")
+	api.HandleFunc("/trades", s.handleTrades).Methods("GET")
+	api.HandleFunc("/metrics", s.handleMetrics).Methods("GET")
+	api.HandleFunc("/start", s.handleStart).Methods("POST")
+	api.HandleFunc("/stop", s.handleStop).Methods("POST")
+	api.Use(corsMiddleware)
 
-	s.router.Use(corsMiddleware)
+	if s.staticDir != "" {
+		s.router.PathPrefix("/").Handler(s.spaHandler())
+	}
 }
 
 func corsMiddleware(next http.Handler) http.Handler {
@@ -120,4 +128,16 @@ func (s *Server) handleStop(w http.ResponseWriter, r *http.Request) {
 func writeJSON(w http.ResponseWriter, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(data)
+}
+
+func (s *Server) spaHandler() http.Handler {
+	fs := http.FileServer(http.Dir(s.staticDir))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := filepath.Join(s.staticDir, r.URL.Path)
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			http.ServeFile(w, r, filepath.Join(s.staticDir, "index.html"))
+			return
+		}
+		fs.ServeHTTP(w, r)
+	})
 }
