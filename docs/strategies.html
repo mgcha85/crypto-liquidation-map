@@ -26,19 +26,19 @@
 
     <div class="grid grid-4">
       <div class="card stat">
-        <div class="stat-value negative">-17.55%</div>
+        <div class="stat-value negative">-18.82%</div>
         <div class="stat-label">Buy & Hold</div>
       </div>
       <div class="card stat">
-        <div class="stat-value positive">+20.74%</div>
+        <div class="stat-value positive">+21.84%</div>
         <div class="stat-label">Best Alpha</div>
       </div>
       <div class="card stat">
-        <div class="stat-value positive">+3.19%</div>
+        <div class="stat-value positive">+3.01%</div>
         <div class="stat-label">Best Return</div>
       </div>
       <div class="card stat">
-        <div class="stat-value neutral">5.77</div>
+        <div class="stat-value neutral">8.10</div>
         <div class="stat-label">Best Sharpe</div>
       </div>
     </div>
@@ -110,7 +110,17 @@
             <td>48</td>
           </tr>
           <tr class="best-row">
-            <td><span class="strategy-badge opt">OPT</span> Long Horizon (48h) ⭐</td>
+            <td><span class="strategy-badge ens">ENS</span> 5m→1h Ensemble ⭐</td>
+            <td class="positive">+3.01%</td>
+            <td class="positive">+21.84%</td>
+            <td>8.10</td>
+            <td>0.79%</td>
+            <td>63.6%</td>
+            <td>-</td>
+            <td>11</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge opt">OPT</span> Long Horizon (48h)</td>
             <td class="positive">+3.19%</td>
             <td class="positive">+20.74%</td>
             <td>5.77</td>
@@ -141,25 +151,25 @@
           </tr>
         </tbody>
       </table>
-      <p style="margin-top: 1rem; font-size: 0.9rem;">⭐ Best overall: Long Horizon (48h) with positive returns, highest Sharpe, and lowest drawdown.</p>
+      <p style="margin-top: 1rem; font-size: 0.9rem;">⭐ Best overall: 5m→1h Ensemble with highest Sharpe (8.10), lowest drawdown (0.79%), and best alpha (+21.84%).</p>
     </div>
 
     <h2>Key Findings</h2>
     <div class="grid grid-2">
       <div class="card">
-        <h3>✅ Parameter Optimization Works</h3>
+        <h3>✅ Multi-Timeframe Ensemble Wins</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>Extending horizon to 48h yielded <strong>positive returns</strong> (+3.19%)</li>
-          <li>Tight stop-loss (0.5%) reduced trades but increased quality</li>
-          <li>Best Sharpe ratio (5.77) with longer holding period</li>
+          <li>5m signals filtering 1h entries achieved <strong>Sharpe 8.10</strong></li>
+          <li>Reduced trades to 11 high-quality entries (from 42)</li>
+          <li>Lowest max drawdown at 0.79%</li>
         </ul>
       </div>
       <div class="card">
-        <h3>⚠️ Hybrid Model Needs Tuning</h3>
+        <h3>⚠️ Trade-off: Quality vs Quantity</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>CNN-LSTM-MLP showed 52% win rate but poor Sharpe</li>
-          <li>Fewer trades (48) suggest conservative predictions</li>
-          <li>Alpha (+17%) competitive with XGBoost baselines</li>
+          <li>Ensemble has only 11 trades - may not be statistically robust</li>
+          <li>Long Horizon (48h) offers more trades (39) with similar returns</li>
+          <li>Consider combining strategies for diversification</li>
         </ul>
       </div>
     </div>
@@ -266,32 +276,37 @@
     </div>
 
     <h2>Model Architecture Comparison</h2>
-    <div class="grid grid-3">
+    <div class="grid grid-4">
       <div class="card">
         <h3>🌲 XGBoost</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
           <li>31 engineered features</li>
-          <li>max_depth=4, lr=0.05, n=150</li>
-          <li>Class-weighted for imbalance</li>
-          <li>Best for stable predictions</li>
+          <li>max_depth=4, lr=0.05</li>
+          <li>Class-weighted</li>
         </ul>
       </div>
       <div class="card">
-        <h3>🧠 Hybrid CNN-LSTM-MLP</h3>
+        <h3>🧠 Hybrid DL</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>100 candles (Conv1D + BiLSTM)</li>
-          <li>50×100 liquidation heatmap (Conv2D)</li>
-          <li>31 ML features (MLP branch)</li>
-          <li>Fusion layer → 2 classes</li>
+          <li>CNN + BiLSTM + MLP</li>
+          <li>100 candles + heatmap</li>
+          <li>End-to-end learning</li>
         </ul>
       </div>
       <div class="card">
-        <h3>⚙️ Optimized XGBoost</h3>
+        <h3>⚙️ Optimized</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>Same 31 features</li>
-          <li>48h horizon (vs 24h baseline)</li>
+          <li>48h horizon</li>
           <li>2% PT / 1% SL</li>
-          <li>Best risk-adjusted returns</li>
+          <li>Longer holding</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🔗 Ensemble</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>5m filters 1h</li>
+          <li>Agreement required</li>
+          <li>Highest Sharpe</li>
         </ul>
       </div>
     </div>
@@ -302,17 +317,17 @@
         <div class="recommendation">
           <div class="rec-icon">🎯</div>
           <h4>Production</h4>
-          <p>Use <strong>48h horizon XGBoost</strong> - only config with positive returns and Sharpe > 5.</p>
+          <p>Use <strong>5m→1h Ensemble</strong> for best risk-adjusted returns (Sharpe 8.10, 0.79% max DD).</p>
         </div>
         <div class="recommendation">
-          <div class="rec-icon">🔬</div>
-          <h4>Research</h4>
-          <p>Tune hybrid model with longer training. Test ensemble: XGBoost + CNN-LSTM voting.</p>
+          <div class="rec-icon">📊</div>
+          <h4>Alternative</h4>
+          <p>Use <strong>48h horizon XGBoost</strong> for more trades (39 vs 11) with similar returns.</p>
         </div>
         <div class="recommendation">
           <div class="rec-icon">⚡</div>
           <h4>Risk Management</h4>
-          <p>Consider tight SL (0.5%) for lower drawdown, or higher R:R (3:1) for asymmetric payoff.</p>
+          <p>Combine strategies: Ensemble for high-conviction, Long Horizon for steady exposure.</p>
         </div>
       </div>
     </div>
@@ -334,6 +349,7 @@
     .strategy-badge.xgb { background: #3b82f6; color: white; }
     .strategy-badge.hybrid { background: #8b5cf6; color: white; }
     .strategy-badge.opt { background: #10b981; color: white; }
+    .strategy-badge.ens { background: #f59e0b; color: white; }
     .best-row { background: rgba(16, 185, 129, 0.1); }
     .baseline { background: rgba(100, 100, 100, 0.1); }
     .positive { color: #10b981; font-weight: 600; }

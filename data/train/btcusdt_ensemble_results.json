@@ -1,0 +1,36 @@
+{
+  "symbol": "BTCUSDT",
+  "test_period": "2026-01-01 to 2026-04-22",
+  "buy_hold_return": -0.18824444765089032,
+  "strategies": {
+    "5m": {
+      "total_return": 0.017241906088764303,
+      "sharpe_ratio": 2.703385195778178,
+      "max_drawdown": 0.02212031900968048,
+      "win_rate": 0.5492957746478874,
+      "profit_factor": 1.3885475307962245,
+      "num_trades": 71,
+      "alpha": 0.20548635373965463
+    },
+    "1h": {
+      "total_return": 0.010188430697276596,
+      "sharpe_ratio": 1.8624235528212791,
+      "max_drawdown": 0.031682810798035574,
+      "win_rate": 0.4523809523809524,
+      "profit_factor": 1.2395292533022688,
+      "num_trades": 42,
+      "alpha": 0.19843287834816692
+    },
+    "ensemble": {
+      "total_return": 0.03012289803503676,
+      "sharpe_ratio": 8.102071497359125,
+      "max_drawdown": 0.007850527371723945,
+      "win_rate": 0.6363636363636364,
+      "profit_factor": 3.594428317517518,
+      "num_trades": 11,
+      "alpha": 0.21836734568592708,
+      "filter_ratio": 0.5959595959595959
+    }
+  },
+  "generated_at": "2026-04-25T01:19:57.329151"
+}
