@@ -309,3 +309,15 @@ func (m *Manager) GetMetrics() map[string]float64 {
 		"max_drawdown":  m.state.MaxDrawdown,
 	}
 }
+
+func (m *Manager) SetPositionSizePct(pct float64) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.cfg.Position.SizePct = pct / 100.0
+}
+
+func (m *Manager) GetPositionSizePct() float64 {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.cfg.Position.SizePct * 100.0
+}

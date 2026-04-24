@@ -6,6 +6,8 @@
   let apiSecret = $settings.apiSecret;
   let testnet = $settings.testnet;
   let tradingEnabled = $settings.tradingEnabled;
+  let telegramEnabled = $settings.telegramEnabled;
+  let positionSizePct = $settings.positionSizePct;
   let saving = false;
   let message = '';
   
@@ -13,8 +15,22 @@
     saving = true;
     message = '';
     try {
-      await updateSettings({ apiKey, apiSecret, testnet });
-      settings.update(s => ({ ...s, apiKey, apiSecret, testnet, tradingEnabled }));
+      await updateSettings({ 
+        apiKey, 
+        apiSecret, 
+        testnet, 
+        telegramEnabled, 
+        positionSizePct 
+      });
+      settings.update(s => ({ 
+        ...s, 
+        apiKey, 
+        apiSecret, 
+        testnet, 
+        tradingEnabled, 
+        telegramEnabled,
+        positionSizePct 
+      }));
       message = 'Settings saved successfully';
     } catch (e) {
       message = 'Failed to save settings';
@@ -73,6 +89,37 @@
       </div>
     </div>
 
+    <div class="section">
+      <h2>Risk Management</h2>
+      
+      <div class="field">
+        <label for="positionSize">Position Size (%)</label>
+        <div class="range-field">
+          <input 
+            id="positionSize"
+            type="range" 
+            min="1" 
+            max="100" 
+            bind:value={positionSizePct}
+          />
+          <span class="range-value">{positionSizePct}%</span>
+        </div>
+        <p class="hint">Percentage of total balance to use per trade</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Notifications</h2>
+      
+      <div class="toggle-field">
+        <label>
+          <input type="checkbox" bind:checked={telegramEnabled} />
+          <span>Telegram Notifications</span>
+        </label>
+        <p class="hint">Receive trade notifications via Telegram</p>
+      </div>
+    </div>
+
     <div class="actions">
       <button type="submit" disabled={saving}>
         {saving ? 'Saving...' : 'Save Settings'}
@@ -112,6 +159,26 @@
     border: 1px solid #444;
     color: white;
     border-radius: 4px;
+  }
+  
+  .field input[type="range"] { 
+    width: calc(100% - 60px); 
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  .range-field {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .range-value {
+    min-width: 50px;
+    text-align: right;
+    font-weight: bold;
+    color: #3498db;
   }
   
   .toggle-field { margin-bottom: 1rem; }

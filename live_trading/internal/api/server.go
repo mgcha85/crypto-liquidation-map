@@ -129,16 +129,18 @@ func (s *Server) handleStop(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleGetSettings(w http.ResponseWriter, r *http.Request) {
 	resp := map[string]interface{}{
-		"telegram_enabled": s.engine.IsTelegramEnabled(),
-		"trading_enabled":  s.engine.GetState().IsRunning,
+		"telegram_enabled":  s.engine.IsTelegramEnabled(),
+		"trading_enabled":   s.engine.GetState().IsRunning,
+		"position_size_pct": s.engine.GetPositionSizePct(),
 	}
 	writeJSON(w, resp)
 }
 
 func (s *Server) handleUpdateSettings(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		TelegramEnabled *bool `json:"telegram_enabled"`
-		TradingEnabled  *bool `json:"trading_enabled"`
+		TelegramEnabled *bool    `json:"telegram_enabled"`
+		TradingEnabled  *bool    `json:"trading_enabled"`
+		PositionSizePct *float64 `json:"position_size_pct"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -149,6 +151,11 @@ func (s *Server) handleUpdateSettings(w http.ResponseWriter, r *http.Request) {
 	if req.TelegramEnabled != nil {
 		s.engine.SetTelegramEnabled(*req.TelegramEnabled)
 		log.Info().Bool("enabled", *req.TelegramEnabled).Msg("Telegram notification updated")
+	}
+
+	if req.PositionSizePct != nil {
+		s.engine.SetPositionSizePct(*req.PositionSizePct)
+		log.Info().Float64("pct", *req.PositionSizePct).Msg("Position size updated")
 	}
 
 	if req.TradingEnabled != nil {

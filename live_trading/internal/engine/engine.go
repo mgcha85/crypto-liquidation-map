@@ -410,3 +410,11 @@ func (e *Engine) SetTelegramEnabled(enabled bool) {
 func (e *Engine) IsTelegramEnabled() bool {
 	return e.telegram.IsEnabled()
 }
+
+func (e *Engine) SetPositionSizePct(pct float64) {
+	e.riskMgr.SetPositionSizePct(pct)
+}
+
+func (e *Engine) GetPositionSizePct() float64 {
+	return e.riskMgr.GetPositionSizePct()
+}

@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  trader:
+    build:
+      context: ./live_trading
+      dockerfile: Dockerfile
+    container_name: crypto-trader
+    restart: unless-stopped
+    environment:
+      - BINANCE_API_KEY=${BINANCE_API_KEY}
+      - BINANCE_API_SECRET=${BINANCE_API_SECRET}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+    volumes:
+      - ./live_trading/models:/app/models:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - trading-net
+    command: ["--config=configs/${CONFIG_FILE:-paper.yaml}", "--capital=${INITIAL_CAPITAL:-10000}"]
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: crypto-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - trader
+    networks:
+      - trading-net
+
+networks:
+  trading-net:
+    driver: bridge
