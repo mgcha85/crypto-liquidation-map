@@ -1,0 +1,98 @@
+{
+  "symbol": "BTCUSDT",
+  "test_period": "2026-01-01 to 2026-04-22",
+  "buy_hold_return": -0.17134474359927765,
+  "generated_at": "2026-04-25T06:29:18.392774",
+  "results": [
+    {
+      "name": "Optuna-Optimized XGB",
+      "total_return": 0.02819695951651413,
+      "sharpe_ratio": 5.19107476331176,
+      "max_drawdown": 0.008932066135977511,
+      "win_rate": 0.5833333333333334,
+      "profit_factor": 2.560446340678896,
+      "num_trades": 24,
+      "alpha": 0.19954170311579178
+    },
+    {
+      "name": "Ensemble + 48h Agreement",
+      "total_return": 0.014829478840256982,
+      "sharpe_ratio": 4.074870928347068,
+      "max_drawdown": 0.004161233656426775,
+      "win_rate": 0.5,
+      "profit_factor": 2.4312475449224564,
+      "num_trades": 10,
+      "alpha": 0.18617422243953463
+    },
+    {
+      "name": "Weighted (0.5E+0.5H)",
+      "total_return": 0.01518496447023776,
+      "sharpe_ratio": 3.509743005733063,
+      "max_drawdown": 0.005654156929592718,
+      "win_rate": 0.5,
+      "profit_factor": 2.2545482595253876,
+      "num_trades": 10,
+      "alpha": 0.1865297080695154
+    },
+    {
+      "name": "Weighted (0.7E+0.3H)",
+      "total_return": 0.012302209640912887,
+      "sharpe_ratio": 2.65327403902694,
+      "max_drawdown": 0.013371545881240787,
+      "win_rate": 0.45,
+      "profit_factor": 1.4906818540688656,
+      "num_trades": 20,
+      "alpha": 0.18364695324019054
+    },
+    {
+      "name": "Weighted (0.6E+0.4H)",
+      "total_return": 0.012302209640912887,
+      "sharpe_ratio": 2.65327403902694,
+      "max_drawdown": 0.013371545881240787,
+      "win_rate": 0.45,
+      "profit_factor": 1.4906818540688656,
+      "num_trades": 20,
+      "alpha": 0.18364695324019054
+    },
+    {
+      "name": "5m\u21921h Ensemble",
+      "total_return": 0.012302209640912887,
+      "sharpe_ratio": 2.648886992613411,
+      "max_drawdown": 0.013371545881240787,
+      "win_rate": 0.45,
+      "profit_factor": 1.4906818540688656,
+      "num_trades": 20,
+      "alpha": 0.18364695324019054
+    },
+    {
+      "name": "XGB 1h Baseline",
+      "total_return": 0.011713022595100542,
+      "sharpe_ratio": 2.031529055302453,
+      "max_drawdown": 0.017522563747160165,
+      "win_rate": 0.5614035087719298,
+      "profit_factor": 1.3225490008392273,
+      "num_trades": 57,
+      "alpha": 0.1830577661943782
+    },
+    {
+      "name": "XGB Long Horizon (48h)",
+      "total_return": -0.00302346205963111,
+      "sharpe_ratio": -0.460418262973335,
+      "max_drawdown": 0.01555963137388022,
+      "win_rate": 0.4782608695652174,
+      "profit_factor": 1.0121846398421899,
+      "num_trades": 46,
+      "alpha": 0.16832128153964654
+    },
+    {
+      "name": "DEAP-Evolved (PT=0.02,SL=0.01,H=29)",
+      "total_return": -0.044772511766670076,
+      "sharpe_ratio": -6.471319318706294,
+      "max_drawdown": 0.051497088771567064,
+      "win_rate": 0.5526315789473685,
+      "profit_factor": 0.608075297986657,
+      "num_trades": 76,
+      "alpha": 0.12657223183260757
+    }
+  ]
+}

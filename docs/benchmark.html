@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensive Benchmark - Crypto Liquidation Map</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-strategies">
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="comparison.html">Compare</a></li>
+      <li><a href="strategies.html">Strategies</a></li>
+      <li><a href="benchmark.html" class="active">Benchmark</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Comprehensive Strategy Benchmark</h1>
+      <p>Phase 1-5: Baseline → Strategy Combination → Optimization (Optuna + DEAP) → Final Results</p>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card stat">
+        <div class="stat-value negative">-17.13%</div>
+        <div class="stat-label">Buy & Hold</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value positive">+19.95%</div>
+        <div class="stat-label">Best Alpha</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value positive">+2.82%</div>
+        <div class="stat-label">Best Return</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value neutral">5.19</div>
+        <div class="stat-label">Best Sharpe</div>
+      </div>
+    </div>
+
+    <h2>Full Benchmark Results (Ranked by Sharpe)</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Strategy</th>
+            <th>Return</th>
+            <th>Alpha</th>
+            <th>Sharpe</th>
+            <th>Max DD</th>
+            <th>Win Rate</th>
+            <th>PF</th>
+            <th>Trades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="baseline">
+            <td><strong>Buy & Hold</strong></td>
+            <td class="negative">-17.13%</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          </tr>
+          <tr class="best-row">
+            <td><span class="strategy-badge opt">OPT</span> Optuna-Optimized XGB ⭐</td>
+            <td class="positive">+2.82%</td>
+            <td class="positive">+19.95%</td>
+            <td>5.19</td>
+            <td>0.89%</td>
+            <td>58.3%</td>
+            <td>2.56</td>
+            <td>24</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge combo">CMB</span> Ensemble + 48h Agreement</td>
+            <td class="positive">+1.48%</td>
+            <td class="positive">+18.62%</td>
+            <td>4.07</td>
+            <td>0.42%</td>
+            <td>50.0%</td>
+            <td>2.43</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge combo">CMB</span> Weighted (0.5E+0.5H)</td>
+            <td class="positive">+1.52%</td>
+            <td class="positive">+18.65%</td>
+            <td>3.51</td>
+            <td>0.57%</td>
+            <td>50.0%</td>
+            <td>2.25</td>
+            <td>10</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge ens">ENS</span> 5m→1h Ensemble</td>
+            <td class="positive">+1.23%</td>
+            <td class="positive">+18.36%</td>
+            <td>2.65</td>
+            <td>1.34%</td>
+            <td>45.0%</td>
+            <td>1.49</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge xgb">XGB</span> 1h Baseline</td>
+            <td class="positive">+1.17%</td>
+            <td class="positive">+18.31%</td>
+            <td>2.03</td>
+            <td>1.75%</td>
+            <td>56.1%</td>
+            <td>1.32</td>
+            <td>57</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge xgb">XGB</span> Long Horizon (48h)</td>
+            <td class="negative">-0.30%</td>
+            <td class="positive">+16.83%</td>
+            <td>-0.46</td>
+            <td>1.56%</td>
+            <td>47.8%</td>
+            <td>1.01</td>
+            <td>46</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge deap">GA</span> DEAP-Evolved</td>
+            <td class="negative">-4.48%</td>
+            <td class="positive">+12.66%</td>
+            <td>-6.47</td>
+            <td>5.15%</td>
+            <td>55.3%</td>
+            <td>0.61</td>
+            <td>76</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Phase Summary</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Phase 1: Baseline</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>XGB 1h Baseline: +1.17% return, Sharpe 2.03</li>
+          <li>XGB Long Horizon (48h): -0.30% return</li>
+          <li>5m→1h Ensemble: +1.23% return, Sharpe 2.65</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Phase 2: Strategy Combination</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li><strong>Ensemble + 48h Agreement</strong>: Sharpe 4.07, lowest DD 0.42%</li>
+          <li>Weighted (0.5/0.5): Balanced performance</li>
+          <li>Key insight: Agreement filter improves quality</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Phase 3: Optuna (Bayesian)</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>30 trials, TPE sampler</li>
+          <li><strong>Best Sharpe: 5.19</strong></li>
+          <li>Optimal: max_depth=8, lr=0.014, n_est=175</li>
+          <li>Return: +2.82%, DD: 0.89%</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Phase 3: DEAP (Genetic)</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>5 generations, population 10</li>
+          <li>Best: PT=1.6%, SL=1.0%, H=29</li>
+          <li>⚠️ Overfit: -4.48% return</li>
+          <li>Needs more generations + larger population</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Key Insights</h2>
+    <div class="card">
+      <div class="grid grid-3">
+        <div class="recommendation">
+          <div class="rec-icon">🏆</div>
+          <h4>Winner</h4>
+          <p><strong>Optuna-Optimized XGB</strong>: Best Sharpe (5.19), best return (+2.82%), good trade count (24)</p>
+        </div>
+        <div class="recommendation">
+          <div class="rec-icon">🛡️</div>
+          <h4>Lowest Risk</h4>
+          <p><strong>Ensemble + 48h Agreement</strong>: Lowest max DD (0.42%), but only 10 trades</p>
+        </div>
+        <div class="recommendation">
+          <div class="rec-icon">⚠️</div>
+          <h4>Avoid</h4>
+          <p><strong>DEAP-Evolved</strong>: Overfit to training data, poor out-of-sample performance</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Optimization Methods Comparison</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Type</th>
+            <th>Trials/Gens</th>
+            <th>Best Sharpe</th>
+            <th>Time</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="best-row">
+            <td><strong>Optuna</strong></td>
+            <td>Bayesian (TPE)</td>
+            <td>30 trials</td>
+            <td>5.19</td>
+            <td>~2 min</td>
+            <td>✅ Recommended</td>
+          </tr>
+          <tr>
+            <td>DEAP</td>
+            <td>Genetic Algorithm</td>
+            <td>5 gens × 10 pop</td>
+            <td>-6.47</td>
+            <td>~3 min</td>
+            <td>⚠️ Needs tuning</td>
+          </tr>
+          <tr>
+            <td>Grid Search</td>
+            <td>Exhaustive</td>
+            <td>8 configs</td>
+            <td>~3.0</td>
+            <td>~5 min</td>
+            <td>Good baseline</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Recommendations</h2>
+    <div class="card">
+      <div class="grid grid-3">
+        <div class="recommendation">
+          <div class="rec-icon">🎯</div>
+          <h4>Production</h4>
+          <p>Use <strong>Optuna-Optimized XGB</strong> with learned hyperparameters (max_depth=8, lr=0.014)</p>
+        </div>
+        <div class="recommendation">
+          <div class="rec-icon">🔬</div>
+          <h4>Further Research</h4>
+          <p>Increase DEAP generations (20+) and population (50+) to avoid premature convergence</p>
+        </div>
+        <div class="recommendation">
+          <div class="rec-icon">⚡</div>
+          <h4>Ensemble</h4>
+          <p>Combine Optuna XGB + Ensemble Agreement for best risk-adjusted returns</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Generated: April 25, 2026 | Test Period: Jan 1 - Apr 22, 2026 | <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
+  </footer>
+
+  <style>
+    .strategy-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .strategy-badge.xgb { background: #3b82f6; color: white; }
+    .strategy-badge.ens { background: #f59e0b; color: white; }
+    .strategy-badge.combo { background: #8b5cf6; color: white; }
+    .strategy-badge.opt { background: #10b981; color: white; }
+    .strategy-badge.deap { background: #ef4444; color: white; }
+    .best-row { background: rgba(16, 185, 129, 0.1); }
+    .baseline { background: rgba(100, 100, 100, 0.1); }
+    .positive { color: #10b981; font-weight: 600; }
+    .negative { color: #ef4444; font-weight: 600; }
+    .recommendation { text-align: center; padding: 1rem; }
+    .rec-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  </style>
+</body>
+</html>

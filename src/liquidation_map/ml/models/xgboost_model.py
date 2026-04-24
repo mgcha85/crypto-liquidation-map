@@ -33,7 +33,7 @@ class XGBConfig:
     random_state: int = 42
     n_jobs: int = -1
     tree_method: str = "hist"
-    device: str = "cuda"
+    device: str = "cpu"
 
 
 FEATURE_COLUMNS = [
@@ -130,7 +130,15 @@ class XGBoostModel:
         available_cols = [c for c in self.feature_names if c in df.columns]
         X = df.select(available_cols).to_numpy()
         
-        preds = self.model.predict(X)
+        dmatrix = xgb.DMatrix(X, feature_names=available_cols)
+        booster = self.model.get_booster()
+        raw_preds = booster.predict(dmatrix)
+        
+        if len(raw_preds.shape) > 1:
+            preds = raw_preds.argmax(axis=1)
+        else:
+            preds = (raw_preds > 0.5).astype(int)
+        
         return preds - 1
     
     def predict_proba(self, df: pl.DataFrame) -> np.ndarray:
@@ -140,7 +148,13 @@ class XGBoostModel:
         available_cols = [c for c in self.feature_names if c in df.columns]
         X = df.select(available_cols).to_numpy()
         
-        return self.model.predict_proba(X)
+        dmatrix = xgb.DMatrix(X, feature_names=available_cols)
+        booster = self.model.get_booster()
+        raw_preds = booster.predict(dmatrix)
+        
+        if len(raw_preds.shape) == 1:
+            return np.column_stack([1 - raw_preds, raw_preds])
+        return raw_preds
     
     def get_feature_importance(self) -> pl.DataFrame:
         if self.model is None:
