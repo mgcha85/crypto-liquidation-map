@@ -76,25 +76,29 @@ class XGBoostModel:
     ) -> dict:
         X_train, y_train = self._prepare_data(df_train)
         
-        self.model = xgb.XGBClassifier(
-            objective=self.config.objective,
-            num_class=self.config.num_class,
-            max_depth=self.config.max_depth,
-            learning_rate=self.config.learning_rate,
-            n_estimators=self.config.n_estimators,
-            subsample=self.config.subsample,
-            colsample_bytree=self.config.colsample_bytree,
-            min_child_weight=self.config.min_child_weight,
-            gamma=self.config.gamma,
-            reg_alpha=self.config.reg_alpha,
-            reg_lambda=self.config.reg_lambda,
-            random_state=self.config.random_state,
-            n_jobs=self.config.n_jobs,
-            tree_method=self.config.tree_method,
-            device=self.config.device,
-            eval_metric=self.config.eval_metric,
-            early_stopping_rounds=self.config.early_stopping_rounds if df_val is not None else None,
-        )
+        model_params = {
+            "objective": self.config.objective,
+            "max_depth": self.config.max_depth,
+            "learning_rate": self.config.learning_rate,
+            "n_estimators": self.config.n_estimators,
+            "subsample": self.config.subsample,
+            "colsample_bytree": self.config.colsample_bytree,
+            "min_child_weight": self.config.min_child_weight,
+            "gamma": self.config.gamma,
+            "reg_alpha": self.config.reg_alpha,
+            "reg_lambda": self.config.reg_lambda,
+            "random_state": self.config.random_state,
+            "n_jobs": self.config.n_jobs,
+            "tree_method": self.config.tree_method,
+            "device": self.config.device,
+            "eval_metric": self.config.eval_metric,
+            "early_stopping_rounds": self.config.early_stopping_rounds if df_val is not None else None,
+        }
+        
+        if self.config.objective.startswith("multi:"):
+            model_params["num_class"] = self.config.num_class
+        
+        self.model = xgb.XGBClassifier(**model_params)
         
         if df_val is not None:
             X_val, y_val = self._prepare_data(df_val)
@@ -143,10 +147,9 @@ class XGBoostModel:
             raise ValueError("Model not trained")
         
         importance = self.model.feature_importances_
-        available_cols = [c for c in self.feature_names if c in self.model.feature_names_in_]
         
         return pl.DataFrame({
-            "feature": available_cols,
+            "feature": self.feature_names[:len(importance)],
             "importance": importance,
         }).sort("importance", descending=True)
     

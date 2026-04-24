@@ -353,3 +353,96 @@ footer a {
   text-align: center;
   color: var(--text-muted);
 }
+
+/* Strategy Badges */
+.strategy-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-right: 0.5rem;
+}
+
+.strategy-badge.xgb { background: rgba(88, 166, 255, 0.2); color: var(--accent-blue); }
+.strategy-badge.cnn { background: rgba(163, 113, 247, 0.2); color: var(--accent-purple); }
+.strategy-badge.hybrid { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+
+/* Best Row Highlight */
+tr.best-row td {
+  background: rgba(63, 185, 80, 0.1);
+}
+
+tr.baseline td {
+  background: var(--bg-tertiary);
+}
+
+/* Timeframe Analysis */
+.timeframe-analysis {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.timeframe-item {
+  padding: 1rem;
+  border-left: 3px solid var(--accent-blue);
+  background: var(--bg-tertiary);
+  border-radius: 0 8px 8px 0;
+}
+
+.timeframe-item h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.timeframe-item p {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Methodology Grid */
+.methodology-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.method-item {
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.method-item h4 {
+  margin-bottom: 0.5rem;
+  color: var(--accent-blue);
+}
+
+.method-item p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+/* Recommendations */
+.recommendation {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.rec-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.recommendation h4 {
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.recommendation p {
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
