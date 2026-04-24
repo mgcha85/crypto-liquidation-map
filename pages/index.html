@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Liquidation Map - ML Trading Strategy</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-home">
+  <nav>
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="comparison.html">Compare</a></li>
+      <li><a href="coins/btc.html">BTC</a></li>
+      <li><a href="coins/eth.html">ETH</a></li>
+      <li><a href="coins/sol.html">SOL</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h1>Liquidation Map Trading Strategy</h1>
+      <p>ML-powered trading signals using Open Interest liquidation heatmaps from Binance historical data. Analyzing 5+ years of data across multiple cryptocurrencies.</p>
+    </div>
+
+    <div class="grid grid-4">
+      <div class="card stat">
+        <div class="stat-value positive">+12.09%</div>
+        <div class="stat-label">BTC Alpha</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value positive">+18.95%</div>
+        <div class="stat-label">ETH Alpha</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value positive">+26.04%</div>
+        <div class="stat-label">SOL Alpha</div>
+      </div>
+      <div class="card stat">
+        <div class="stat-value neutral">5.7 yrs</div>
+        <div class="stat-label">Data Period</div>
+      </div>
+    </div>
+
+    <h2>Strategy Overview</h2>
+    <div class="card">
+      <p>This strategy uses machine learning to predict price movements based on liquidation map patterns. By analyzing where traders are likely to get liquidated, we can anticipate potential price magnets and resistance zones.</p>
+      
+      <div class="feature-grid">
+        <div class="feature">
+          <h3><span class="feature-icon">📊</span> Liquidation Heatmaps</h3>
+          <p>Extract 20+ features from Open Interest data including cluster distances, volume concentrations, and distribution metrics.</p>
+        </div>
+        <div class="feature">
+          <h3><span class="feature-icon">🤖</span> XGBoost Model</h3>
+          <p>Gradient boosting classifier trained on 5+ years of hourly data with class-weighted sampling for imbalanced labels.</p>
+        </div>
+        <div class="feature">
+          <h3><span class="feature-icon">📈</span> Triple-Barrier Labels</h3>
+          <p>Labels generated using +2% profit take, -1% stop loss, and 24-hour horizon for consistent risk/reward.</p>
+        </div>
+        <div class="feature">
+          <h3><span class="feature-icon">🔬</span> Walk-Forward Testing</h3>
+          <p>Out-of-sample testing on 2026 data (4 months) to validate model generalization.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Methodology</h2>
+    <div class="card">
+      <div class="methodology-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h4>Data Collection</h4>
+          <p>Download Open Interest (5-min) and OHLCV (1-hour) data from Binance Vision for each symbol. Data ranges from September 2020 to April 2026.</p>
+        </div>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h4>Feature Engineering</h4>
+          <p>For each timestamp, compute a 50-hour lookback window to extract liquidation map features (cluster positions, intensities, entropy) and candle features (returns, volatility, ATR).</p>
+        </div>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h4>Label Generation</h4>
+          <p>Apply triple-barrier method: +1 if price hits +2% first, -1 if price hits -1% first, within 24-hour horizon. This creates asymmetric risk/reward (2:1).</p>
+        </div>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h4>Model Training</h4>
+          <p>Train XGBoost with class weights to handle imbalanced data (~65% sell vs ~35% buy). Hyperparameters: max_depth=4, learning_rate=0.05, n_estimators=150.</p>
+        </div>
+      </div>
+      <div class="methodology-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <h4>Backtesting</h4>
+          <p>Test on 2026 data (out-of-sample). Execute trades with 10% position sizing, 0.04% taker fee, 5bps slippage. Compare against Buy & Hold baseline.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Quick Results (Q1 2026)</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Strategy Return</th>
+            <th>Buy & Hold</th>
+            <th>Alpha</th>
+            <th>Sharpe</th>
+            <th>Win Rate</th>
+            <th>Trades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="coins/btc.html" class="symbol-link"><span class="symbol-icon">₿</span> BTCUSDT</a></td>
+            <td class="positive">+1.30%</td>
+            <td class="negative">-10.80%</td>
+            <td class="positive">+12.09%</td>
+            <td>1.88</td>
+            <td>55.0%</td>
+            <td>100</td>
+          </tr>
+          <tr>
+            <td><a href="coins/eth.html" class="symbol-link"><span class="symbol-icon">Ξ</span> ETHUSDT</a></td>
+            <td class="negative">-0.71%</td>
+            <td class="negative">-19.66%</td>
+            <td class="positive">+18.95%</td>
+            <td>-0.63</td>
+            <td>50.7%</td>
+            <td>140</td>
+          </tr>
+          <tr>
+            <td><a href="coins/sol.html" class="symbol-link"><span class="symbol-icon">◎</span> SOLUSDT</a></td>
+            <td class="negative">-4.04%</td>
+            <td class="negative">-30.08%</td>
+            <td class="positive">+26.04%</td>
+            <td>-3.78</td>
+            <td>42.7%</td>
+            <td>117</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 1rem; font-size: 0.9rem;">Test period: Jan 1, 2026 - Apr 22, 2026 (bearish market). All strategies outperformed Buy & Hold.</p>
+    </div>
+
+    <h2>Key Findings</h2>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>What Works</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>Liquidation cluster features are predictive</li>
+          <li>XGBoost outperforms CNN on this dataset</li>
+          <li>All models beat Buy & Hold in bear market</li>
+          <li>BTC model has positive absolute returns</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Limitations</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>Test period only 4 months (2026)</li>
+          <li>Bear market bias in test data</li>
+          <li>ETH/SOL have negative absolute returns</li>
+          <li>Win rate ~50% requires good R:R</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Data Sources</h2>
+    <div class="card">
+      <p>All data is freely available from <a href="https://data.binance.vision/" style="color: var(--accent-blue);">Binance Vision</a>:</p>
+      <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+        <li><code>data/futures/um/daily/metrics/{SYMBOL}/</code> - Open Interest snapshots (5-min)</li>
+        <li><code>data/futures/um/daily/klines/{SYMBOL}/1h/</code> - OHLCV candles (1-hour)</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Built with Python, Polars, XGBoost, and Plotly. <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
+  </footer>
+</body>
+</html>

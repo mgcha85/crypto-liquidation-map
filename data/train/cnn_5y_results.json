@@ -1,0 +1,14 @@
+{
+  "model": "CNN (5-year)",
+  "train_samples": 7784,
+  "test_samples": 448,
+  "accuracy": 0.47098214285714285,
+  "total_return": -0.0023937252415755506,
+  "sharpe_ratio": -0.315285926860104,
+  "max_drawdown": 0.02323968510019572,
+  "win_rate": 0.5578947368421052,
+  "profit_factor": 1.0627465951302593,
+  "num_trades": 95,
+  "buy_hold_return": -0.10796885916303883,
+  "alpha": 0.10557513392146328
+}

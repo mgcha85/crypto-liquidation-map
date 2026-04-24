@@ -1,0 +1,14 @@
+{
+  "symbol": "SOLUSDT",
+  "train_samples": 5960,
+  "test_samples": 448,
+  "accuracy": 0.5089285714285714,
+  "total_return": -0.04039329024843141,
+  "sharpe_ratio": -3.7813519833140394,
+  "max_drawdown": 0.051136317525781516,
+  "win_rate": 0.42735042735042733,
+  "profit_factor": 0.8212919413813706,
+  "num_trades": 117,
+  "buy_hold_return": -0.3008325328210054,
+  "alpha": 0.260439242572574
+}

@@ -1,0 +1,17 @@
+{
+  "model": "XGBoost (5-year, balanced)",
+  "train_samples": 7784,
+  "test_samples": 448,
+  "accuracy": 0.5848214285714286,
+  "precision_buy": 0.37857142857142856,
+  "recall_buy": 0.34868421052631576,
+  "f1_buy": 0.36301369863013694,
+  "total_return": 0.012979914302638784,
+  "sharpe_ratio": 1.8830804804470407,
+  "max_drawdown": 0.015231988977511478,
+  "win_rate": 0.55,
+  "profit_factor": 1.2663680655484486,
+  "num_trades": 100,
+  "buy_hold_return": -0.10796885916303883,
+  "alpha": 0.12094877346567762
+}

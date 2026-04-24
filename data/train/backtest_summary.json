@@ -1,0 +1,66 @@
+{
+  "strategies": [
+    {
+      "name": "XGBoost (Liquidation Map Features)",
+      "return_pct": 0.21133823091690207,
+      "sharpe": 5.6902173311029856,
+      "max_dd_pct": 0.2873721861894536,
+      "win_rate_pct": 60.0,
+      "num_trades": 10,
+      "alpha_pct": -3.206460687521277
+    },
+    {
+      "name": "Buy & Hold",
+      "return_pct": 3.417798918438179,
+      "sharpe": null,
+      "max_dd_pct": null,
+      "win_rate_pct": null,
+      "num_trades": 1,
+      "alpha_pct": 0
+    }
+  ],
+  "test_period": "2026-04-19 11:00:00 ~ 2026-04-22 23:00:00",
+  "train_period": "2024-12-03 02:00:00 ~ 2026-04-19 10:00:00",
+  "top_features": [
+    {
+      "name": "top3_short_dist_2",
+      "importance": 0.09645023196935654
+    },
+    {
+      "name": "largest_long_cluster_volume",
+      "importance": 0.09370917826890945
+    },
+    {
+      "name": "atr_24h",
+      "importance": 0.07693128287792206
+    },
+    {
+      "name": "return_24h",
+      "importance": 0.0575374998152256
+    },
+    {
+      "name": "largest_long_cluster_distance",
+      "importance": 0.056609027087688446
+    },
+    {
+      "name": "top3_long_dist_1",
+      "importance": 0.05654701218008995
+    },
+    {
+      "name": "long_intensity",
+      "importance": 0.050185397267341614
+    },
+    {
+      "name": "volatility_24h",
+      "importance": 0.04845187067985535
+    },
+    {
+      "name": "entropy",
+      "importance": 0.04409540817141533
+    },
+    {
+      "name": "largest_short_cluster_volume",
+      "importance": 0.03921379894018173
+    }
+  ]
+}

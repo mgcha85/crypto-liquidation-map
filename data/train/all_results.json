@@ -1,0 +1,44 @@
+{
+  "ETHUSDT": {
+    "symbol": "ETHUSDT",
+    "train_samples": 5960,
+    "test_samples": 448,
+    "accuracy": 0.5267857142857143,
+    "total_return": -0.007079999689219685,
+    "sharpe_ratio": -0.62724060343856,
+    "max_drawdown": 0.02372085347573395,
+    "win_rate": 0.5071428571428571,
+    "profit_factor": 1.0259402969539748,
+    "num_trades": 140,
+    "buy_hold_return": -0.19655457931205567,
+    "alpha": 0.18947457962283598
+  },
+  "SOLUSDT": {
+    "symbol": "SOLUSDT",
+    "train_samples": 5960,
+    "test_samples": 448,
+    "accuracy": 0.5089285714285714,
+    "total_return": -0.04039329024843141,
+    "sharpe_ratio": -3.7813519833140394,
+    "max_drawdown": 0.051136317525781516,
+    "win_rate": 0.42735042735042733,
+    "profit_factor": 0.8212919413813706,
+    "num_trades": 117,
+    "buy_hold_return": -0.3008325328210054,
+    "alpha": 0.260439242572574
+  },
+  "BTCUSDT": {
+    "symbol": "BTCUSDT",
+    "train_samples": 7784,
+    "test_samples": 448,
+    "accuracy": 0.5848214285714286,
+    "total_return": 0.012979914302638784,
+    "sharpe_ratio": 1.8830804804470407,
+    "max_drawdown": 0.015231988977511478,
+    "win_rate": 0.55,
+    "profit_factor": 1.2663680655484486,
+    "num_trades": 100,
+    "buy_hold_return": -0.10796885916303883,
+    "alpha": 0.12094877346567762
+  }
+}

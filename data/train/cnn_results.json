@@ -1,0 +1,15 @@
+{
+  "model": "CNN (Binary)",
+  "architecture": "Conv(32)->Conv(64)->Conv(128)->FC(64)->FC(2)",
+  "train_samples": 336,
+  "test_samples": 85,
+  "accuracy": 0.6470588235294118,
+  "total_return": -0.0054434171788109165,
+  "sharpe_ratio": -8.964595968533455,
+  "max_drawdown": 0.0058524915526938755,
+  "win_rate": 0.42857142857142855,
+  "profit_factor": 0.3609241170560453,
+  "num_trades": 7,
+  "buy_hold_return": 0.04491622935663887,
+  "alpha": -0.05035964653544979
+}

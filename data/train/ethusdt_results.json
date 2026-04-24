@@ -1,0 +1,14 @@
+{
+  "symbol": "ETHUSDT",
+  "train_samples": 5960,
+  "test_samples": 448,
+  "accuracy": 0.5267857142857143,
+  "total_return": -0.007079999689219685,
+  "sharpe_ratio": -0.62724060343856,
+  "max_drawdown": 0.02372085347573395,
+  "win_rate": 0.5071428571428571,
+  "profit_factor": 1.0259402969539748,
+  "num_trades": 140,
+  "buy_hold_return": -0.19655457931205567,
+  "alpha": 0.18947457962283598
+}
