@@ -1,0 +1,37 @@
+mode: paper
+symbol: BTCUSDT
+
+data:
+  lookback_hours: 50
+  update_interval_sec: 3600
+
+risk:
+  daily_loss_limit_pct: 0.02
+  weekly_loss_limit_pct: 0.05
+  max_positions: 1
+
+position:
+  size_pct: 0.10
+  taker_fee_pct: 0.0004
+  slippage_bps: 5.0
+  leverage: 1
+
+barrier:
+  profit_take: 0.02
+  stop_loss: 0.01
+  horizon_hours: 48
+
+api:
+  testnet: true
+  timeout_sec: 30
+  max_retries: 3
+
+logging:
+  level: INFO
+  log_trades: true
+  log_features: false
+
+paths:
+  model: models/xgb_optuna_best.json
+  checkpoints: checkpoints/
+  logs: logs/
