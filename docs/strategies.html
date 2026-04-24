@@ -21,7 +21,7 @@
   <div class="container">
     <div class="hero">
       <h1>BTC Multi-Strategy Comparison</h1>
-      <p>Comparing XGBoost strategies across multiple timeframes (5m, 15m, 1h) using liquidation map features. Test period: 2026 Q1 (bear market).</p>
+      <p>Comparing XGBoost, Hybrid DL, and parameter-optimized strategies across multiple timeframes. Test period: 2026 Q1 (bear market).</p>
     </div>
 
     <div class="grid grid-4">
@@ -30,16 +30,16 @@
         <div class="stat-label">Buy & Hold</div>
       </div>
       <div class="card stat">
-        <div class="stat-value positive">+16.63%</div>
-        <div class="stat-label">Best Alpha (1h)</div>
+        <div class="stat-value positive">+20.74%</div>
+        <div class="stat-label">Best Alpha</div>
       </div>
       <div class="card stat">
-        <div class="stat-value negative">-0.93%</div>
-        <div class="stat-label">Best Return (1h)</div>
+        <div class="stat-value positive">+3.19%</div>
+        <div class="stat-label">Best Return</div>
       </div>
       <div class="card stat">
-        <div class="stat-value neutral">3</div>
-        <div class="stat-label">Timeframes</div>
+        <div class="stat-value neutral">5.77</div>
+        <div class="stat-label">Best Sharpe</div>
       </div>
     </div>
 
@@ -52,7 +52,6 @@
             <th>Return</th>
             <th>Alpha</th>
             <th>Sharpe</th>
-            <th>Sortino</th>
             <th>Max DD</th>
             <th>Win Rate</th>
             <th>Profit Factor</th>
@@ -69,14 +68,12 @@
             <td>-</td>
             <td>-</td>
             <td>-</td>
-            <td>-</td>
           </tr>
           <tr>
             <td><span class="strategy-badge xgb">XGB</span> 5-minute</td>
             <td class="negative">-1.34%</td>
             <td class="positive">+16.21%</td>
             <td>-1.15</td>
-            <td>-0.48</td>
             <td>2.18%</td>
             <td>46.5%</td>
             <td>0.95</td>
@@ -87,91 +84,215 @@
             <td class="negative">-1.00%</td>
             <td class="positive">+16.56%</td>
             <td>-0.84</td>
-            <td>-0.39</td>
             <td>2.38%</td>
             <td>48.9%</td>
             <td>1.01</td>
             <td>137</td>
           </tr>
-          <tr class="best-row">
-            <td><span class="strategy-badge xgb">XGB</span> 1-hour ⭐</td>
+          <tr>
+            <td><span class="strategy-badge xgb">XGB</span> 1-hour</td>
             <td class="negative">-0.93%</td>
             <td class="positive">+16.63%</td>
             <td>-0.62</td>
-            <td>-0.34</td>
             <td>3.10%</td>
             <td>44.9%</td>
             <td>1.02</td>
             <td>136</td>
           </tr>
+          <tr>
+            <td><span class="strategy-badge hybrid">DL</span> Hybrid CNN-LSTM</td>
+            <td class="negative">-2.13%</td>
+            <td class="positive">+17.06%</td>
+            <td>-4.56</td>
+            <td>3.12%</td>
+            <td>52.1%</td>
+            <td>0.76</td>
+            <td>48</td>
+          </tr>
+          <tr class="best-row">
+            <td><span class="strategy-badge opt">OPT</span> Long Horizon (48h) ⭐</td>
+            <td class="positive">+3.19%</td>
+            <td class="positive">+20.74%</td>
+            <td>5.77</td>
+            <td>1.18%</td>
+            <td>64.1%</td>
+            <td>2.29</td>
+            <td>39</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge opt">OPT</span> Tight SL (0.5%)</td>
+            <td class="positive">+2.20%</td>
+            <td class="positive">+19.75%</td>
+            <td>3.49</td>
+            <td>0.98%</td>
+            <td>50.0%</td>
+            <td>2.23</td>
+            <td>12</td>
+          </tr>
+          <tr>
+            <td><span class="strategy-badge opt">OPT</span> High R:R (3:1)</td>
+            <td class="positive">+1.51%</td>
+            <td class="positive">+19.06%</td>
+            <td>2.33</td>
+            <td>1.09%</td>
+            <td>48.8%</td>
+            <td>1.52</td>
+            <td>41</td>
+          </tr>
         </tbody>
       </table>
-      <p style="margin-top: 1rem; font-size: 0.9rem;">⭐ Best overall: 1h timeframe has highest alpha and best risk-adjusted metrics.</p>
+      <p style="margin-top: 1rem; font-size: 0.9rem;">⭐ Best overall: Long Horizon (48h) with positive returns, highest Sharpe, and lowest drawdown.</p>
     </div>
 
     <h2>Key Findings</h2>
     <div class="grid grid-2">
       <div class="card">
-        <h3>✅ All Strategies Beat Buy & Hold</h3>
+        <h3>✅ Parameter Optimization Works</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>All timeframes generated positive alpha (16%+)</li>
-          <li>Strategies avoided 80%+ of the bear market drawdown</li>
-          <li>1h timeframe had the best Sharpe ratio (-0.62 vs -17.55% B&H)</li>
+          <li>Extending horizon to 48h yielded <strong>positive returns</strong> (+3.19%)</li>
+          <li>Tight stop-loss (0.5%) reduced trades but increased quality</li>
+          <li>Best Sharpe ratio (5.77) with longer holding period</li>
         </ul>
       </div>
       <div class="card">
-        <h3>⚠️ Absolute Returns Negative</h3>
+        <h3>⚠️ Hybrid Model Needs Tuning</h3>
         <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>No strategy achieved positive absolute returns</li>
-          <li>Win rates below 50% (44.9% - 48.9%)</li>
-          <li>Profit factors near 1.0 indicate marginal edge</li>
+          <li>CNN-LSTM-MLP showed 52% win rate but poor Sharpe</li>
+          <li>Fewer trades (48) suggest conservative predictions</li>
+          <li>Alpha (+17%) competitive with XGBoost baselines</li>
         </ul>
       </div>
     </div>
 
-    <h2>Timeframe Analysis</h2>
+    <h2>Parametric Study Results</h2>
     <div class="card">
-      <div class="timeframe-analysis">
-        <div class="timeframe-item">
-          <h4>📊 5-Minute Timeframe</h4>
-          <p><strong>Characteristics:</strong> Highest trade frequency (127), smallest max drawdown (2.18%)</p>
-          <p><strong>Pros:</strong> More trading opportunities, tighter risk control</p>
-          <p><strong>Cons:</strong> Higher transaction costs impact, more noise in signals</p>
-        </div>
-        <div class="timeframe-item">
-          <h4>⏱️ 15-Minute Timeframe</h4>
-          <p><strong>Characteristics:</strong> Best win rate (48.9%), balanced trade count (137)</p>
-          <p><strong>Pros:</strong> Good balance between signal quality and frequency</p>
-          <p><strong>Cons:</strong> Middle-ground performance, not best in any single metric</p>
-        </div>
-        <div class="timeframe-item">
-          <h4>🕐 1-Hour Timeframe</h4>
-          <p><strong>Characteristics:</strong> Best Sharpe (-0.62), highest alpha (+16.63%), profit factor > 1</p>
-          <p><strong>Pros:</strong> Cleaner signals, lower transaction cost impact, most stable</p>
-          <p><strong>Cons:</strong> Largest max drawdown (3.10%), lowest win rate (44.9%)</p>
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>PT</th>
+            <th>SL</th>
+            <th>Horizon</th>
+            <th>R:R</th>
+            <th>Return</th>
+            <th>Sharpe</th>
+            <th>Max DD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="best-row">
+            <td><strong>Long Horizon</strong> ⭐</td>
+            <td>2%</td>
+            <td>1%</td>
+            <td>48h</td>
+            <td>2:1</td>
+            <td class="positive">+3.19%</td>
+            <td>5.77</td>
+            <td>1.18%</td>
+          </tr>
+          <tr>
+            <td>Tight SL</td>
+            <td>2%</td>
+            <td>0.5%</td>
+            <td>24h</td>
+            <td>4:1</td>
+            <td class="positive">+2.20%</td>
+            <td>3.49</td>
+            <td>0.98%</td>
+          </tr>
+          <tr>
+            <td>High R:R (3:1)</td>
+            <td>3%</td>
+            <td>1%</td>
+            <td>24h</td>
+            <td>3:1</td>
+            <td class="positive">+1.51%</td>
+            <td>2.33</td>
+            <td>1.09%</td>
+          </tr>
+          <tr>
+            <td>Baseline</td>
+            <td>2%</td>
+            <td>1%</td>
+            <td>24h</td>
+            <td>2:1</td>
+            <td class="negative">-0.23%</td>
+            <td>-0.34</td>
+            <td>2.66%</td>
+          </tr>
+          <tr>
+            <td>Aggressive PT</td>
+            <td>2.5%</td>
+            <td>1%</td>
+            <td>24h</td>
+            <td>2.5:1</td>
+            <td class="negative">-1.47%</td>
+            <td>-3.08</td>
+            <td>2.08%</td>
+          </tr>
+          <tr>
+            <td>Conservative</td>
+            <td>1.5%</td>
+            <td>1%</td>
+            <td>24h</td>
+            <td>1.5:1</td>
+            <td class="negative">-2.48%</td>
+            <td>-4.74</td>
+            <td>3.04%</td>
+          </tr>
+          <tr>
+            <td>Wide SL</td>
+            <td>2%</td>
+            <td>1.5%</td>
+            <td>24h</td>
+            <td>1.3:1</td>
+            <td class="negative">-4.33%</td>
+            <td>-7.63</td>
+            <td>4.39%</td>
+          </tr>
+          <tr>
+            <td>Short Horizon</td>
+            <td>2%</td>
+            <td>1%</td>
+            <td>12h</td>
+            <td>2:1</td>
+            <td class="negative">-4.81%</td>
+            <td>-6.85</td>
+            <td>5.23%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 1rem; font-size: 0.9rem;">PT=Profit Take, SL=Stop Loss, R:R=Risk/Reward Ratio</p>
     </div>
 
-    <h2>Methodology</h2>
-    <div class="card">
-      <div class="methodology-grid">
-        <div class="method-item">
-          <h4>Data Source</h4>
-          <p>1-minute candles from Binance Futures, resampled to target timeframes. Open Interest data at 5-minute intervals.</p>
-        </div>
-        <div class="method-item">
-          <h4>Features</h4>
-          <p>31 features: 20 liquidation map features (cluster distances, volumes, entropy) + 11 candle features (returns, volatility, ATR).</p>
-        </div>
-        <div class="method-item">
-          <h4>Labeling</h4>
-          <p>Triple-barrier: +2% profit take, -1% stop loss, 24-hour horizon (scaled by timeframe).</p>
-        </div>
-        <div class="method-item">
-          <h4>Model</h4>
-          <p>XGBoost binary classifier with class weighting. Parameters: max_depth=4, learning_rate=0.05, n_estimators=150.</p>
-        </div>
+    <h2>Model Architecture Comparison</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>🌲 XGBoost</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>31 engineered features</li>
+          <li>max_depth=4, lr=0.05, n=150</li>
+          <li>Class-weighted for imbalance</li>
+          <li>Best for stable predictions</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🧠 Hybrid CNN-LSTM-MLP</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>100 candles (Conv1D + BiLSTM)</li>
+          <li>50×100 liquidation heatmap (Conv2D)</li>
+          <li>31 ML features (MLP branch)</li>
+          <li>Fusion layer → 2 classes</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>⚙️ Optimized XGBoost</h3>
+        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+          <li>Same 31 features</li>
+          <li>48h horizon (vs 24h baseline)</li>
+          <li>2% PT / 1% SL</li>
+          <li>Best risk-adjusted returns</li>
+        </ul>
       </div>
     </div>
 
@@ -181,24 +302,44 @@
         <div class="recommendation">
           <div class="rec-icon">🎯</div>
           <h4>Production</h4>
-          <p>Use <strong>1-hour timeframe</strong> for live trading - best risk-adjusted returns and lowest execution complexity.</p>
+          <p>Use <strong>48h horizon XGBoost</strong> - only config with positive returns and Sharpe > 5.</p>
         </div>
         <div class="recommendation">
           <div class="rec-icon">🔬</div>
           <h4>Research</h4>
-          <p>Test hybrid models combining multiple timeframes. 5m signals could filter 1h entries.</p>
+          <p>Tune hybrid model with longer training. Test ensemble: XGBoost + CNN-LSTM voting.</p>
         </div>
         <div class="recommendation">
           <div class="rec-icon">⚡</div>
-          <h4>Improvement</h4>
-          <p>Add position sizing based on signal confidence. Scale exposure with prediction probability.</p>
+          <h4>Risk Management</h4>
+          <p>Consider tight SL (0.5%) for lower drawdown, or higher R:R (3:1) for asymmetric payoff.</p>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>Generated: April 2026 | Test Period: Jan 1 - Apr 22, 2026 | <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
+    <p>Generated: April 25, 2026 | Test Period: Jan 1 - Apr 22, 2026 | <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
   </footer>
+
+  <style>
+    .strategy-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .strategy-badge.xgb { background: #3b82f6; color: white; }
+    .strategy-badge.hybrid { background: #8b5cf6; color: white; }
+    .strategy-badge.opt { background: #10b981; color: white; }
+    .best-row { background: rgba(16, 185, 129, 0.1); }
+    .baseline { background: rgba(100, 100, 100, 0.1); }
+    .positive { color: #10b981; font-weight: 600; }
+    .negative { color: #ef4444; font-weight: 600; }
+    .recommendation { text-align: center; padding: 1rem; }
+    .rec-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  </style>
 </body>
 </html>

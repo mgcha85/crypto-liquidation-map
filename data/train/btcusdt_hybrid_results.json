@@ -1,0 +1,14 @@
+{
+  "model": "Hybrid CNN-LSTM-MLP",
+  "symbol": "BTCUSDT",
+  "test_period": "2026-01-01 to 2026-04-22",
+  "total_return": -0.021305204340074657,
+  "sharpe_ratio": -4.5550976053533025,
+  "max_drawdown": 0.031177901746874615,
+  "win_rate": 0.5208333333333334,
+  "profit_factor": 0.7586984801390888,
+  "num_trades": 48,
+  "buy_hold_return": -0.19189774221832523,
+  "alpha": 0.17059253787825057,
+  "generated_at": "2026-04-25T01:15:50.938794"
+}

@@ -260,3 +260,48 @@ class FeatureExtractor:
             "wick_ratio_lower": 0.0,
             "price_position": 0.5,
         }
+    
+    def build_liquidation_heatmap(
+        self,
+        df_oi: pl.DataFrame,
+        current_price: float,
+        n_buckets: int = 50,
+        time_buckets: int = 100,
+    ) -> np.ndarray:
+        if df_oi.is_empty():
+            return np.zeros((n_buckets, time_buckets), dtype=np.float32)
+        
+        price_range = current_price * self.price_range_pct
+        price_min = current_price - price_range
+        price_max = current_price + price_range
+        
+        timestamps = df_oi["timestamp"].unique().sort().to_list()
+        if len(timestamps) > time_buckets:
+            timestamps = timestamps[-time_buckets:]
+        
+        heatmap = np.zeros((n_buckets, time_buckets), dtype=np.float32)
+        
+        price_bins = np.linspace(price_min, price_max, n_buckets + 1)
+        
+        for t_idx, ts in enumerate(timestamps):
+            ts_data = df_oi.filter(pl.col("timestamp") == ts)
+            
+            for row in ts_data.iter_rows(named=True):
+                liq_price = row.get("liquidation_price", row.get("price_bucket", 0))
+                if liq_price is None:
+                    continue
+                
+                volume = row.get("oi_value", row.get("volume", 1.0))
+                if volume is None:
+                    volume = 1.0
+                
+                if price_min <= liq_price <= price_max:
+                    p_idx = int((liq_price - price_min) / (price_max - price_min) * (n_buckets - 1))
+                    p_idx = max(0, min(n_buckets - 1, p_idx))
+                    heatmap[p_idx, t_idx] += volume
+        
+        max_val = heatmap.max()
+        if max_val > 0:
+            heatmap = heatmap / max_val
+        
+        return heatmap
