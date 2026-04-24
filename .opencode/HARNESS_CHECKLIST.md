@@ -82,13 +82,27 @@ $ curl http://localhost:18080/
 <!DOCTYPE html><html lang="en">...  # Svelte SPA served
 ```
 
+### Signal Parity Test (CP-001)
+```
+$ python live_trading/scripts/test_signal_parity.py
+============================================================
+SIGNAL PARITY TEST RESULTS
+============================================================
+Samples tested:     100
+Label matches:      100/100 (100.0%)
+Max prob diff:      0.000000
+Mean prob diff:     0.000000
+============================================================
+✅ CP-001 PASSED: Signal parity verified
+```
+
 ## Pending Checkpoints
 
-| ID | Item | Status |
-|----|------|--------|
-| CP-001 | Signal parity (Python vs Go) | ✅ Pass |
-| CP-002 | Risk limits verified | ✅ Pass |
-| CP-003 | Paper trading 1 week | Pending |
-| CP-004 | Strategy note complete | ✅ Pass |
-| CP-005 | Telegram integration | ✅ Pass |
-| CP-006 | Settings API | ✅ Pass |
+| ID | Item | Status | Evidence |
+|----|------|--------|----------|
+| CP-001 | Signal parity (Python vs Go) | ✅ Pass | 100/100 matches, max_diff=1.2e-7 |
+| CP-002 | Risk limits verified | ✅ Pass | Daily/weekly limits in manager.go |
+| CP-003 | Paper trading 1 week | Pending | - |
+| CP-004 | Strategy note complete | ✅ Pass | docs/STRATEGY_NOTE.md |
+| CP-005 | Telegram integration | ✅ Pass | internal/telegram/client.go |
+| CP-006 | Settings API | ✅ Pass | GET/POST /api/settings |
