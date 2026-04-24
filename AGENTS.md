@@ -1,199 +1,246 @@
-# AGENTS.md - AI Agent Instructions
+# AGENTS.md
 
-## Project Overview
+This repository is configured for OpenCode-style agent workflows.
 
-**Crypto Liquidation Map** - ML-based crypto trading system using liquidation heatmap data.
+## 1) Mission and Scope
 
-**Tech Stack:**
-- Python 3.12+ with type hints
-- Polars (data processing - default)
-- DuckDB (join-heavy/SQL pipelines only)
-- XGBoost (primary ML model)
-- PyTorch (CNN-LSTM hybrid)
-- Plotly (visualization)
-- aiohttp (async API calls)
-- Svelte (live trading dashboard)
+- Primary goal: maintain a reproducible BTC strategy research stack and production handoff path.
+- Implementation split:
+  - Backtest and research: Python
+  - Live trading engine: Go
+  - Live trading frontend: Svelte
+- Core outputs:
+  - Reproducible research outputs and strategy comparisons
+  - Strategy notes and validation checkpoints for live deployment
+  - Safe, reviewable code changes in `src/crypto_backtest/`, `scripts/`, and future Go runtime modules
 
-**Goal:** Production trading system based on liquidation map ML strategy.
+## 2) Project Map
 
-## Repository Structure
+- Core package: `src/liquidation_map/`
+  - `analysis/liquidation_map.py`: Liquidation map calculations
+  - `visualization/heatmap.py`: Interactive Plotly heatmaps
+  - `data/`: Download and process Binance data
+- Backtest package: `src/crypto_backtest/`
+  - `long_strategy.py`: L-shape entry/exit logic and backtest engine
+  - `long_parametric.py`: parameter grid study and ranking
+  - `data_loader.py`: minute -> timeframe resampling and indicator loading
+  - `features.py`, `models_tree.py`, `models_deep.py`: ML/DL pipeline
+  - `report.py`, `storage.py`: reporting and persistence
+- Executable scripts: `scripts/`
+  - 5m/15m/4h/1h analyses and multi-asset studies
+- Live trading system: `live_trading/`
+  - `cmd/trader/main.go`: entry point with graceful shutdown
+  - `internal/config/config.go`: SOTA parameters (LOCKED)
+  - `internal/engine/engine.go`: core trading loop with feature extraction
+  - `internal/binance/client.go`: Binance Futures API (testnet/production)
+  - `internal/model/predictor.go`: ONNX model inference (XGBoost)
+  - `internal/risk/manager.go`: position/risk management
+  - `internal/api/server.go`: HTTP API server + static file serving
+  - `configs/paper.yaml`, `configs/production.yaml`: runtime configs
+  - `models/xgb_optuna_best.onnx`: trained model for inference
+  - `scripts/export_onnx.py`: XGBoost to ONNX conversion
+- Frontend: `dashboard/`
+  - `src/routes/+page.svelte`: Dashboard (real-time status, position)
+  - `src/routes/history/+page.svelte`: Trade history
+  - `src/routes/settings/+page.svelte`: API keys, Telegram toggle
+  - `src/lib/api.ts`: API client for engine communication
+  - `src/lib/stores.ts`: Svelte state management
+  - `build/`: Static SPA build (served by Go engine)
+- Published artifacts:
+  - `pages/`: canonical GitHub Pages source for strategy/result pages
+  - `docs/`: legacy or supporting artifacts (keep in sync when both are used)
 
-```
-crypto-liquidation-map/
-├── src/liquidation_map/
-│   ├── data/              # Data collection & processing
-│   │   ├── downloader.py  # Binance Vision downloader
-│   │   └── processor.py   # Raw → DuckDB pipeline
-│   ├── analysis/          # Liquidation calculations
-│   │   └── liquidation_map.py
-│   ├── ml/                # ML pipeline
-│   │   ├── features.py    # Feature extraction (31 features)
-│   │   ├── labeling.py    # Triple barrier labeling
-│   │   ├── backtest.py    # Backtesting engine
-│   │   ├── multi_timeframe.py  # 5m/15m/1h ensemble
-│   │   └── models/
-│   │       ├── xgboost_model.py
-│   │       └── hybrid_model.py  # CNN-LSTM-MLP
-│   └── visualization/
-│       └── heatmap.py
-├── live_trading/          # Production trading module
-│   ├── src/               # Core engine
-│   ├── tests/             # Parity & risk tests
-│   ├── configs/           # Paper/production configs
-│   ├── checkpoints/       # Verification evidence
-│   ├── models/            # Trained models
-│   └── docs/              # Runbook & dev guide
-├── dashboard/             # Svelte live trading UI
-│   ├── src/routes/        # Dashboard, History, Settings
-│   └── src/lib/           # API client, stores
-├── scripts/               # CLI utilities & benchmarks
-├── data/                  # Local storage (gitignored)
-│   ├── raw/               # Downloaded ZIPs
-│   ├── processed/         # Parquet files
-│   ├── train/             # Models & results
-│   └── cache/             # Request cache
-├── docs/                  # GitHub Pages source
-└── .opencode/             # AI workflow templates
-```
+## 3) Data Contract
 
-## Data Sources
+- Root data path: `/mnt/data/finance`
+- Time-series layout: hive partition
+- Agent behavior:
+  - Never hardcode alternate data roots without explicit approval
+  - Validate partition/timeframe availability before long runs
+  - Keep loaders deterministic and explicit about partition columns
 
-### Primary: /mnt/data/finance (Hive Partition)
-- Path: `/mnt/data/finance/cryptocurrency/{exchange}/{symbol}/{timeframe}/`
-- Formats: `1m`, `5m`, `15m`, `1h`, `4h`, `1d`
-- Use for: Training data, feature engineering
+## 4) Agent Modes
 
-### Secondary: Binance Vision (Free API)
-- Base URL: `https://data.binance.vision/`
-- Open Interest: `data/futures/um/daily/openInterest/{SYMBOL}/`
-- Liquidation: `data/futures/um/daily/liquidationSnapshot/{SYMBOL}/`
-- Klines: `data/futures/um/daily/klines/{SYMBOL}/{INTERVAL}/`
+Use two-step workflow by default.
 
-### Live: Binance Futures API
-- Testnet: `https://testnet.binancefuture.com`
-- Production: `https://fapi.binance.com`
+1. Plan mode (read-only)
+   - Understand impacted modules and data dependencies
+   - Draft or update `.opencode/PLAN.md`
+2. Build mode (write)
+   - Apply minimal code/doc changes
+   - Record decisions and deltas in `.opencode/IMPLEMENT.md`
 
-## SOTA Benchmark (LOCKED)
+If the user explicitly asks for immediate implementation, skip directly to Build mode.
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| Total Return | +2.82% | Test: 2026-01-01 ~ 2026-04-22 |
-| Sharpe Ratio | 5.19 | Risk-adjusted |
-| Max Drawdown | 0.89% | Risk limit reference |
-| Win Rate | 58.3% | Consistency metric |
-| Profit Factor | 2.56 | Win/Loss ratio |
-| Alpha | +19.95% | vs -17.13% B&H |
+## 5) Context Loading Order
 
-### Optimal XGBoost Parameters (DO NOT MODIFY)
-```python
-{
-    "max_depth": 8,
-    "learning_rate": 0.0137,
-    "n_estimators": 175,
-    "subsample": 0.681,
-    "colsample_bytree": 0.668,
-    "gamma": 1.183,
-    "reg_alpha": 2.367,
-    "reg_lambda": 1.127,
-}
-```
+Before editing code, read context in this order:
 
-### Triple Barrier (DO NOT MODIFY)
-```python
-{
-    "profit_take": 0.02,  # 2%
-    "stop_loss": 0.01,    # 1%
-    "horizon": 48,        # hours
-}
-```
+1. `README.md`
+2. `pyproject.toml`
+3. Target module in `src/crypto_backtest/`
+4. Related script in `scripts/`
+5. Matching report/result docs in `pages/` and `docs/`
 
-## Conventions
+## 6) Runtime and Performance
 
-### Code Style
-- Python 3.12+ with type hints
-- Ruff for linting/formatting
-- 100 char line length
-- Polars over Pandas (always)
-- Async for I/O operations
-- GPU/parallel processing when feasible
+- Backtest data/compute defaults:
+  - Use `polars` as the primary dataframe/query engine
+  - Use `duckdb` only when query ergonomics or IO pattern clearly benefit
+- Performance policy:
+  - Actively use GPU and parallel processing where feasible
+  - Prefer vectorized operations and batched model training
+  - Avoid single-thread bottlenecks in large parametric or ML/DL runs
 
-### Naming
-- snake_case for functions/variables
-- PascalCase for classes
-- SCREAMING_SNAKE_CASE for constants
+## 7) Research Workflow
 
-### Testing
-- pytest with pytest-asyncio
-- Test files: `test_*.py`
-- Parity tests required for live trading
-
-### Commits
-- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`
-- Keep commits atomic
-
-## ML/DL Protocol
-
-- Train/Test split: TIME-BASED only
-- Test window: Latest 1 year (most recent)
-- Train window: All earlier history
-- Feature count: 31 (20 liquidation + 11 candle)
-
-## Strategy Track Order
+Run strategy tracks in strict sequence, then compare:
 
 1. Baseline algorithm backtest
-2. Parametric study on key knobs
+2. Parametric study
 3. ML/DL enhancement
-4. Cross-track comparison table
-5. Profitable candidate → Hardening
 
-## Live Trading Checkpoints
+After sequence completion:
 
-| CP | Description | Verification |
-|----|-------------|--------------|
-| CP-001 | Core Engine Parity | Signals match backtest |
-| CP-002 | Feature Extraction Parity | |diff| < 1e-6 |
-| CP-003 | Order Execution Simulation | 7-day paper trading |
-| CP-004 | Risk Limits Active | Daily -2%, Weekly -5% |
-| CP-005 | Live Deployment Ready | All systems go |
+- Compare all three tracks side-by-side
+- If any track is profitable, select candidate strategy and run an ideation phase:
+  - Identify robustness improvements
+  - Identify risk-control improvements
+  - Identify execution and slippage realism improvements
 
-## Tool Permissions
+## 8) Metrics Standard
 
-**Allowed:**
-- Read/edit: `src/`, `live_trading/`, `dashboard/`, `tests/`, `scripts/`, `docs/`
-- Run: `pytest`, `ruff`, `mypy`
-- Download from data.binance.vision
-- Read from `/mnt/data/finance`
+Backtest result tables should include at least:
 
-**Restricted (ask first):**
-- Modifying `pyproject.toml` dependencies
-- Creating new top-level directories
-- Any network requests to paid APIs
-- Modifying SOTA parameters
+- Return
+- Alpha
+- Sharpe
+- Max DD
+- Win Rate
+- Profit Factor
+- Trades
+- Expected return per trade
 
-**Not allowed:**
-- Modifying `.env.*` files with real credentials
-- Push to main without verification
-- Delete `data/` directory structure
-- Suppress type errors (`as any`, `@ts-ignore`)
+## 9) ML/DL Split Protocol
 
-## Verification Gates
+- Time split is fixed:
+  - Test: most recent 1 year
+  - Train: all prior history
+- Do not use random shuffle split as the primary report split.
 
-Before marking task complete:
-- [ ] `ruff check src/ tests/` passes
-- [ ] `pytest tests/` passes
-- [ ] Parity tests pass (for live_trading changes)
-- [ ] No TODO left in changed code
-- [ ] Metrics table updated (for strategy changes)
+## 10) Publishing Policy
 
-## Publishing
+- Baseline strategy description and core results must be organized in `pages/`.
+- GitHub Pages publishing content must be reproducible from repository artifacts.
+- If `docs/` is still used by legacy pages, keep headline metrics and conclusions aligned.
+- Every published strategy/result page must include practical trading simulation assumptions:
+  - Seed capital (initial capital)
+  - Position size per trade (allocation ratio or fixed amount)
+  - Execution model summary (entry/exit fill assumptions)
+  - Trading cost assumptions (fees/slippage) and any leverage assumptions
 
-- GitHub Pages: `docs/` directory
-- Required pages: `index.html`, `benchmark.html`, `strategies.html`
-- Comparison pages: `coins/{btc,eth,sol}.html`
+## 11) Live Trading Readiness Gate
 
-## Svelte Dashboard Requirements
+Before declaring implementation complete for Go live trading:
 
-- Tabs: Dashboard, History, Settings
-- Settings: API key, Secret key, Trading on/off toggle
-- Dashboard: Position status, P&L, Signals
-- History: Trade log with filters
+1. Backtest strategy note is written and versioned
+2. Checkpoint list is completed with evidence
+3. All required validations are passed or explicitly waived with rationale
+
+## 12) Live Frontend Baseline
+
+Svelte frontend must include baseline tabs:
+
+- Dashboard
+- History
+- Settings
+
+Settings must include at least:
+
+- Exchange API key
+- Exchange secret key
+- Trading on/off toggle
+- Telegram notification on/off toggle
+
+Live execution notification rule:
+
+- When a trade is completed (`open -> close`), the system must send a Telegram message if Telegram notifications are enabled.
+
+Deployment rule:
+
+- F/E must be built and the build artifacts served through B/E.
+
+## 13) Commands and Verification
+
+Environment setup:
+
+```bash
+source .venv/bin/activate
+pip install -e .
+```
+
+Quality gates (run when relevant):
+
+```bash
+ruff check src scripts
+python -m pytest -q
+```
+
+Notes:
+
+- `tests/` is currently empty. If logic is changed, add focused tests first.
+- Many scripts use hard-coded external data paths. Validate and migrate toward `/mnt/data/finance` contract.
+
+## 14) Safe Change Policy
+
+- Keep changes minimal and local to the requested scope.
+- Do not refactor unrelated files.
+- Preserve existing output file names unless explicit migration is requested.
+- Prefer deterministic outputs and explicit config over hidden defaults.
+
+## 15) Data and Experiment Conventions
+
+- Timeframes in this repo: `5m`, `15m`, `1h`, `4h`
+- Typical strategy knobs:
+  - `breakout_ma`
+  - `consolidation_bars`
+  - `consolidation_range_pct`
+  - `drop_threshold_pct`
+  - `take_profit_pct`
+  - `stop_loss_pct`
+  - `half_close_enabled`, `half_close_pct`
+- Store generated tables and json with clear timeframe prefix under publish artifacts.
+
+## 16) Tooling and Permissions
+
+- Allowed by default:
+  - File read/write inside repository
+  - Python execution in local venv
+  - Linting and tests
+- Ask before:
+  - Installing new dependencies
+  - Large-scale rewrites
+  - Deleting or renaming result artifacts in `pages/` or `docs/`
+  - Any destructive git action
+
+## 17) Definition of Done
+
+A task is done when all are true:
+
+1. Requested code/docs are implemented
+2. Relevant checks pass (or failures are explained)
+3. Baseline -> parametric -> ML/DL comparison is documented (when in scope)
+4. Required metrics are reported
+5. Output paths and reproduction steps are documented
+6. Strategy note and checkpoints are complete for live-trading-bound tasks
+7. For live scope, F/E build artifacts are integrated into B/E serving path
+8. For live scope, completed trades (`open -> close`) trigger Telegram notifications when enabled
+9. `.opencode/IMPLEMENT.md` is updated for non-trivial tasks
+
+## 18) Output Style for Agents
+
+- Summaries should include:
+  - Changed files
+  - Behavioral impact
+  - How to run or verify
+- For reviews, list findings first by severity with exact file references.

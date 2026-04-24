@@ -10,6 +10,7 @@ import (
 	"github.com/mgcha85/crypto-liquidation-map/live_trading/internal/config"
 	"github.com/mgcha85/crypto-liquidation-map/live_trading/internal/model"
 	"github.com/mgcha85/crypto-liquidation-map/live_trading/internal/risk"
+	"github.com/mgcha85/crypto-liquidation-map/live_trading/internal/telegram"
 	"github.com/rs/zerolog/log"
 )
 
@@ -35,6 +36,7 @@ type Engine struct {
 	client    *binance.Client
 	predictor *model.Predictor
 	riskMgr   *risk.Manager
+	telegram  *telegram.Client
 
 	state  State
 	cancel context.CancelFunc
@@ -46,11 +48,14 @@ func New(cfg *config.Config, initialCapital float64) (*Engine, error) {
 		return nil, err
 	}
 
+	tg := telegram.New(cfg.TelegramBotToken, cfg.TelegramChatID, cfg.TelegramEnabled)
+
 	return &Engine{
 		cfg:       cfg,
 		client:    binance.NewClient(&cfg.API),
 		predictor: predictor,
 		riskMgr:   risk.NewManager(initialCapital, cfg),
+		telegram:  tg,
 	}, nil
 }
 
@@ -208,6 +213,14 @@ func (e *Engine) executeClose(trade risk.Trade) {
 			Float64("pnl", trade.PnL).
 			Str("reason", trade.ExitReason).
 			Msg("[PAPER] Close position")
+
+		e.telegram.SendTradeNotification(
+			trade.Side.String(),
+			trade.EntryPrice,
+			trade.ExitPrice,
+			trade.PnL,
+			trade.PnLPct,
+		)
 		return
 	}
 
@@ -222,6 +235,14 @@ func (e *Engine) executeClose(trade risk.Trade) {
 			Int64("orderId", result.OrderID).
 			Float64("qty", result.Qty).
 			Msg("Position closed")
+
+		e.telegram.SendTradeNotification(
+			trade.Side.String(),
+			trade.EntryPrice,
+			trade.ExitPrice,
+			trade.PnL,
+			trade.PnLPct,
+		)
 	}
 }
 
@@ -380,4 +401,12 @@ func (e *Engine) GetRiskManager() *risk.Manager {
 
 func (e *Engine) Close() error {
 	return e.predictor.Close()
+}
+
+func (e *Engine) SetTelegramEnabled(enabled bool) {
+	e.telegram.SetEnabled(enabled)
+}
+
+func (e *Engine) IsTelegramEnabled() bool {
+	return e.telegram.IsEnabled()
 }

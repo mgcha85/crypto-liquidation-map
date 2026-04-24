@@ -33,6 +33,8 @@ func (s *Server) setupRoutes() {
 	api.HandleFunc("/status", s.handleStatus).Methods("GET")
 	api.HandleFunc("/trades", s.handleTrades).Methods("GET")
 	api.HandleFunc("/metrics", s.handleMetrics).Methods("GET")
+	api.HandleFunc("/settings", s.handleGetSettings).Methods("GET")
+	api.HandleFunc("/settings", s.handleUpdateSettings).Methods("POST")
 	api.HandleFunc("/start", s.handleStart).Methods("POST")
 	api.HandleFunc("/stop", s.handleStop).Methods("POST")
 	api.Use(corsMiddleware)
@@ -123,6 +125,42 @@ func (s *Server) handleStart(w http.ResponseWriter, r *http.Request) {
 func (s *Server) handleStop(w http.ResponseWriter, r *http.Request) {
 	s.engine.Stop()
 	writeJSON(w, map[string]string{"status": "stopped"})
+}
+
+func (s *Server) handleGetSettings(w http.ResponseWriter, r *http.Request) {
+	resp := map[string]interface{}{
+		"telegram_enabled": s.engine.IsTelegramEnabled(),
+		"trading_enabled":  s.engine.GetState().IsRunning,
+	}
+	writeJSON(w, resp)
+}
+
+func (s *Server) handleUpdateSettings(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		TelegramEnabled *bool `json:"telegram_enabled"`
+		TradingEnabled  *bool `json:"trading_enabled"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if req.TelegramEnabled != nil {
+		s.engine.SetTelegramEnabled(*req.TelegramEnabled)
+		log.Info().Bool("enabled", *req.TelegramEnabled).Msg("Telegram notification updated")
+	}
+
+	if req.TradingEnabled != nil {
+		if *req.TradingEnabled {
+			go s.engine.Start(r.Context())
+		} else {
+			s.engine.Stop()
+		}
+		log.Info().Bool("enabled", *req.TradingEnabled).Msg("Trading state updated")
+	}
+
+	writeJSON(w, map[string]string{"status": "updated"})
 }
 
 func writeJSON(w http.ResponseWriter, data interface{}) {

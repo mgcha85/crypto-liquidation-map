@@ -57,7 +57,11 @@ type Config struct {
 	ModelPath         string         `yaml:"model_path"`
 	LogLevel          string         `yaml:"log_level"`
 	HTTPPort          int            `yaml:"http_port"`
-	
+
+	TelegramBotToken string `yaml:"telegram_bot_token"`
+	TelegramChatID   string `yaml:"telegram_chat_id"`
+	TelegramEnabled  bool   `yaml:"telegram_enabled"`
+
 	Barrier  BarrierConfig  `yaml:"barrier"`
 	Position PositionConfig `yaml:"position"`
 	Risk     RiskConfig     `yaml:"risk"`
@@ -103,19 +107,25 @@ func Load(path string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	cfg := DefaultConfig()
 	if err := yaml.Unmarshal(data, cfg); err != nil {
 		return nil, err
 	}
-	
+
 	if cfg.API.Key == "" {
 		cfg.API.Key = os.Getenv("BINANCE_API_KEY")
 	}
 	if cfg.API.Secret == "" {
 		cfg.API.Secret = os.Getenv("BINANCE_API_SECRET")
 	}
-	
+	if cfg.TelegramBotToken == "" {
+		cfg.TelegramBotToken = os.Getenv("TELEGRAM_BOT_TOKEN")
+	}
+	if cfg.TelegramChatID == "" {
+		cfg.TelegramChatID = os.Getenv("TELEGRAM_CHAT_ID")
+	}
+
 	return cfg, nil
 }
 
