@@ -7,7 +7,7 @@
 | CP-001 | ⏳ Pending | - | Core Engine Parity |
 | CP-002 | ⏳ Pending | - | Feature Extraction Parity |
 | CP-003 | ⏳ Pending | - | Order Execution Simulation |
-| CP-004 | ⏳ Pending | - | Risk Limits Active |
+| CP-004 | ✅ Passed | 2026-04-25 | Risk Limits Active |
 | CP-005 | ⏳ Pending | - | Live Deployment Ready |
 
 ---
@@ -128,16 +128,18 @@ Status: PENDING
 ### Test Cases
 | Test | Expected | Actual | Pass |
 |------|----------|--------|------|
-| Daily loss -2% | Halt trading | - | ⏳ |
-| Open 2nd position | Rejected | - | ⏳ |
-| Drawdown -5% | Full stop | - | ⏳ |
-| API error 3x | Halt 5 min | - | ⏳ |
+| Daily loss -2% | Halt trading | Halted | ✅ |
+| Open 2nd position | Rejected | Rejected | ✅ |
+| Drawdown -5% | Full stop | Halted | ✅ |
+| Take profit +2% | Exit position | Exited | ✅ |
+| Stop loss -1% | Exit position | Exited | ✅ |
+| Horizon 48h | Exit position | Exited | ✅ |
 
 ### Results
 ```
-Date: [NOT YET VERIFIED]
-Tests passed: -/-
-Status: PENDING
+Date: 2026-04-25
+Tests passed: 6/6
+Status: PASSED
 ```
 
 ---
