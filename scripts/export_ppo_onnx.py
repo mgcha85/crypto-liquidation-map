@@ -136,8 +136,9 @@ def main():
     
     env_config = EnvConfig(
         initial_balance=100_000,
-        position_size_pct=0.05,
-        leverage=3.0,
+        position_size_pct=0.25,
+        leverage=2.0,
+        stop_loss_pct=0.05,
         commission_rate=0.0004,
         slippage_bps=5.0,
         reward_scaling=0.1,
@@ -195,6 +196,7 @@ def main():
         "env_config": {
             "leverage": env_config.leverage,
             "position_size_pct": env_config.position_size_pct,
+            "stop_loss_pct": env_config.stop_loss_pct,
             "commission_rate": env_config.commission_rate,
             "slippage_bps": env_config.slippage_bps,
         },
@@ -249,6 +251,7 @@ def main():
         "trading_config": {
             "leverage": env_config.leverage,
             "position_size_pct": env_config.position_size_pct,
+            "stop_loss_pct": env_config.stop_loss_pct,
             "profit_take": 0.02,
             "stop_loss": 0.01,
             "horizon_hours": 24,

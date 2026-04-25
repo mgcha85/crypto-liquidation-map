@@ -9,17 +9,18 @@ from .features import RLFeatureExtractor, RLFeatureConfig
 @dataclass
 class EnvConfig:
     initial_balance: float = 100_000.0
-    position_size_pct: float = 0.1
-    leverage: float = 1.0  # 1x = no leverage, 10x = 10x leverage
+    position_size_pct: float = 0.25
+    leverage: float = 2.0
+    stop_loss_pct: float = 0.05
     commission_rate: float = 0.0004
     slippage_bps: float = 5.0
     max_position: int = 1
+    liquidation_threshold: float = 0.9
     reward_scaling: float = 1.0
     trade_penalty: float = 0.0
     hold_bonus: float = 0.0
     inactivity_penalty: float = 0.001
     max_inactive_steps: int = 50
-    liquidation_threshold: float = 0.9  # liquidate if equity drops 90%
 
 
 class CryptoFuturesEnv:
@@ -99,6 +100,10 @@ class CryptoFuturesEnv:
         
         self._update_unrealized_pnl(current_price)
         
+        sl_triggered = self._check_stop_loss(current_price)
+        if sl_triggered:
+            target_position = 0
+        
         reward = self._execute_action(target_position, current_price)
         
         self.current_idx += 1
@@ -122,6 +127,18 @@ class CryptoFuturesEnv:
         info = self._get_info()
         
         return obs, reward, terminated, truncated, info
+    
+    def _check_stop_loss(self, current_price: float) -> bool:
+        if self.position == 0 or self.config.stop_loss_pct is None:
+            return False
+        
+        price_return = (current_price - self.entry_price) / self.entry_price
+        position_return = self.position * price_return
+        leveraged_return = position_return * self.config.leverage
+        
+        if leveraged_return <= -self.config.stop_loss_pct:
+            return True
+        return False
     
     def _execute_action(self, target_position: int, price: float) -> float:
         reward = 0.0

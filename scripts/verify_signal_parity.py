@@ -162,8 +162,9 @@ def run_verification():
     
     env_config = EnvConfig(
         initial_balance=100_000,
-        position_size_pct=0.05,
-        leverage=3.0,
+        position_size_pct=0.25,
+        leverage=2.0,
+        stop_loss_pct=0.05,
     )
     feature_config = RLFeatureConfig(candle_window=200, normalize=True)
     
@@ -249,8 +250,9 @@ def run_verification():
         "config": {
             "candle_window": candle_shape[0],
             "ml_feature_dim": ml_dim,
-            "leverage": 3.0,
-            "position_size_pct": 0.05,
+            "leverage": 2.0,
+            "position_size_pct": 0.25,
+            "stop_loss_pct": 0.05,
         },
     }
     
