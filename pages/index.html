@@ -3,189 +3,140 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crypto Liquidation Map - ML Trading Strategy</title>
+  <title>Crypto Liquidation Map - PPO Trading Strategy</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="page-home">
   <nav>
     <ul>
       <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="ppo-strategy.html">PPO Strategy</a></li>
       <li><a href="comparison.html">Compare</a></li>
-      <li><a href="coins/btc.html">BTC</a></li>
-      <li><a href="coins/eth.html">ETH</a></li>
-      <li><a href="coins/sol.html">SOL</a></li>
+      <li><a href="parametric-study.html">Parametric</a></li>
+      <li><a href="robustness.html">Robustness</a></li>
     </ul>
   </nav>
 
   <div class="container">
     <div class="hero">
       <h1>Liquidation Map Trading Strategy</h1>
-      <p>ML-powered trading signals using Open Interest liquidation heatmaps from Binance historical data. Analyzing 5+ years of data across multiple cryptocurrencies.</p>
+      <p>PPO Reinforcement Learning for BTC Futures. Hybrid CNN+MLP architecture trained on 5+ years of liquidation heatmap data. Live trading ready with Go engine.</p>
     </div>
 
     <div class="grid grid-4">
       <div class="card stat">
-        <div class="stat-value positive">+12.09%</div>
-        <div class="stat-label">BTC Alpha</div>
+        <div class="stat-value positive">+182%</div>
+        <div class="stat-label">Avg Annual Return</div>
       </div>
       <div class="card stat">
-        <div class="stat-value positive">+18.95%</div>
-        <div class="stat-label">ETH Alpha</div>
+        <div class="stat-value positive">+130%</div>
+        <div class="stat-label">Avg Alpha vs B&H</div>
       </div>
       <div class="card stat">
-        <div class="stat-value positive">+26.04%</div>
-        <div class="stat-label">SOL Alpha</div>
+        <div class="stat-value neutral">7.32</div>
+        <div class="stat-label">Avg Sharpe Ratio</div>
       </div>
       <div class="card stat">
-        <div class="stat-value neutral">5.7 yrs</div>
-        <div class="stat-label">Data Period</div>
+        <div class="stat-value neutral">5 yrs</div>
+        <div class="stat-label">Cross-Validated</div>
       </div>
     </div>
 
     <h2>Strategy Overview</h2>
     <div class="card">
-      <p>This strategy uses machine learning to predict price movements based on liquidation map patterns. By analyzing where traders are likely to get liquidated, we can anticipate potential price magnets and resistance zones.</p>
+      <p>This strategy uses Proximal Policy Optimization (PPO) to trade BTC futures based on liquidation map patterns. By analyzing where traders are likely to get liquidated, we anticipate price movements and trade accordingly.</p>
       
       <div class="feature-grid">
         <div class="feature">
-          <h3><span class="feature-icon">📊</span> Liquidation Heatmaps</h3>
-          <p>Extract 20+ features from Open Interest data including cluster distances, volume concentrations, and distribution metrics.</p>
+          <h3><span class="feature-icon">🧠</span> PPO Reinforcement Learning</h3>
+          <p>Directly optimizes for trading profits rather than prediction accuracy. Learns optimal entry/exit timing through trial and error.</p>
         </div>
         <div class="feature">
-          <h3><span class="feature-icon">🤖</span> XGBoost Model</h3>
-          <p>Gradient boosting classifier trained on 5+ years of hourly data with class-weighted sampling for imbalanced labels.</p>
+          <h3><span class="feature-icon">📊</span> Hybrid CNN + MLP</h3>
+          <p>CNN processes 200 hours of OHLCV candles. MLP handles 34 liquidation map features. Fusion layer combines both for action selection.</p>
         </div>
         <div class="feature">
           <h3><span class="feature-icon">📈</span> Triple-Barrier Labels</h3>
-          <p>Labels generated using +2% profit take, -1% stop loss, and 24-hour horizon for consistent risk/reward.</p>
+          <p>+2% profit take, -1% stop loss, 24-hour max horizon. Asymmetric 2:1 risk/reward ratio.</p>
         </div>
         <div class="feature">
-          <h3><span class="feature-icon">🔬</span> Walk-Forward Testing</h3>
-          <p>Out-of-sample testing on 2026 data (4 months) to validate model generalization.</p>
+          <h3><span class="feature-icon">⚡</span> Go Live Engine</h3>
+          <p>ONNX model deployed in Go for production trading. 100% signal parity verified between Python backtest and Go engine.</p>
         </div>
       </div>
     </div>
 
-    <h2>Methodology</h2>
-    <div class="card">
-      <div class="methodology-step">
-        <div class="step-number">1</div>
-        <div class="step-content">
-          <h4>Data Collection</h4>
-          <p>Download Open Interest (5-min) and OHLCV (1-hour) data from Binance Vision for each symbol. Data ranges from September 2020 to April 2026.</p>
-        </div>
-      </div>
-      <div class="methodology-step">
-        <div class="step-number">2</div>
-        <div class="step-content">
-          <h4>Feature Engineering</h4>
-          <p>For each timestamp, compute a 50-hour lookback window to extract liquidation map features (cluster positions, intensities, entropy) and candle features (returns, volatility, ATR).</p>
-        </div>
-      </div>
-      <div class="methodology-step">
-        <div class="step-number">3</div>
-        <div class="step-content">
-          <h4>Label Generation</h4>
-          <p>Apply triple-barrier method: +1 if price hits +2% first, -1 if price hits -1% first, within 24-hour horizon. This creates asymmetric risk/reward (2:1).</p>
-        </div>
-      </div>
-      <div class="methodology-step">
-        <div class="step-number">4</div>
-        <div class="step-content">
-          <h4>Model Training</h4>
-          <p>Train XGBoost with class weights to handle imbalanced data (~65% sell vs ~35% buy). Hyperparameters: max_depth=4, learning_rate=0.05, n_estimators=150.</p>
-        </div>
-      </div>
-      <div class="methodology-step">
-        <div class="step-number">5</div>
-        <div class="step-content">
-          <h4>Backtesting</h4>
-          <p>Test on 2026 data (out-of-sample). Execute trades with 10% position sizing, 0.04% taker fee, 5bps slippage. Compare against Buy & Hold baseline.</p>
-        </div>
-      </div>
-    </div>
-
-    <h2>Quick Results (Q1 2026)</h2>
+    <h2>Yearly Performance</h2>
     <div class="card">
       <table>
         <thead>
-          <tr>
-            <th>Symbol</th>
-            <th>Strategy Return</th>
-            <th>Buy & Hold</th>
-            <th>Alpha</th>
-            <th>Sharpe</th>
-            <th>Win Rate</th>
-            <th>Trades</th>
-          </tr>
+          <tr><th>Year</th><th>PPO Return</th><th>Buy & Hold</th><th>Alpha</th><th>Sharpe</th><th>Win Rate</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td><a href="coins/btc.html" class="symbol-link"><span class="symbol-icon">₿</span> BTCUSDT</a></td>
-            <td class="positive">+1.30%</td>
-            <td class="negative">-10.80%</td>
-            <td class="positive">+12.09%</td>
-            <td>1.88</td>
-            <td>55.0%</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td><a href="coins/eth.html" class="symbol-link"><span class="symbol-icon">Ξ</span> ETHUSDT</a></td>
-            <td class="negative">-0.71%</td>
-            <td class="negative">-19.66%</td>
-            <td class="positive">+18.95%</td>
-            <td>-0.63</td>
-            <td>50.7%</td>
-            <td>140</td>
-          </tr>
-          <tr>
-            <td><a href="coins/sol.html" class="symbol-link"><span class="symbol-icon">◎</span> SOLUSDT</a></td>
-            <td class="negative">-4.04%</td>
-            <td class="negative">-30.08%</td>
-            <td class="positive">+26.04%</td>
-            <td>-3.78</td>
-            <td>42.7%</td>
-            <td>117</td>
-          </tr>
+          <tr><td>2021</td><td class="positive">+355.55%</td><td>+59.40%</td><td class="positive">+296.16%</td><td>8.17</td><td>81.1%</td></tr>
+          <tr><td>2022</td><td class="positive">+262.59%</td><td class="negative">-64.54%</td><td class="positive">+327.13%</td><td>8.06</td><td>71.9%</td></tr>
+          <tr><td>2023</td><td class="positive">+73.67%</td><td>+155.80%</td><td class="negative">-82.13%</td><td>6.75</td><td>64.7%</td></tr>
+          <tr><td>2024</td><td class="positive">+130.08%</td><td>+120.31%</td><td class="positive">+9.77%</td><td>6.95</td><td>68.1%</td></tr>
+          <tr><td>2025</td><td class="positive">+89.90%</td><td class="negative">-7.15%</td><td class="positive">+97.05%</td><td>6.65</td><td>64.0%</td></tr>
+          <tr class="summary"><td><strong>AVG</strong></td><td class="positive"><strong>+182.36%</strong></td><td>+52.76%</td><td class="positive"><strong>+129.60%</strong></td><td><strong>7.32</strong></td><td><strong>69.9%</strong></td></tr>
         </tbody>
       </table>
-      <p style="margin-top: 1rem; font-size: 0.9rem;">Test period: Jan 1, 2026 - Apr 22, 2026 (bearish market). All strategies outperformed Buy & Hold.</p>
     </div>
 
-    <h2>Key Findings</h2>
-    <div class="grid grid-2">
-      <div class="card">
-        <h3>What Works</h3>
-        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>Liquidation cluster features are predictive</li>
-          <li>XGBoost outperforms CNN on this dataset</li>
-          <li>All models beat Buy & Hold in bear market</li>
-          <li>BTC model has positive absolute returns</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Limitations</h3>
-        <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-          <li>Test period only 4 months (2026)</li>
-          <li>Bear market bias in test data</li>
-          <li>ETH/SOL have negative absolute returns</li>
-          <li>Win rate ~50% requires good R:R</li>
-        </ul>
-      </div>
-    </div>
-
-    <h2>Data Sources</h2>
+    <h2>Optimal Configuration</h2>
     <div class="card">
-      <p>All data is freely available from <a href="https://data.binance.vision/" style="color: var(--accent-blue);">Binance Vision</a>:</p>
-      <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
-        <li><code>data/futures/um/daily/metrics/{SYMBOL}/</code> - Open Interest snapshots (5-min)</li>
-        <li><code>data/futures/um/daily/klines/{SYMBOL}/1h/</code> - OHLCV candles (1-hour)</li>
-      </ul>
+      <div class="grid grid-3">
+        <div class="config-item">
+          <div class="config-value">3x</div>
+          <div class="config-label">Leverage</div>
+        </div>
+        <div class="config-item">
+          <div class="config-value">5%</div>
+          <div class="config-label">Position Size</div>
+        </div>
+        <div class="config-item">
+          <div class="config-value">0.15x</div>
+          <div class="config-label">Effective Exposure</div>
+        </div>
+      </div>
+      <p class="note">Determined via 48-combination parametric study. Highest Sharpe (7.26) without liquidation risk. <a href="parametric-study.html">See full study →</a></p>
     </div>
-  </div>
 
-  <footer>
-    <p>Built with Python, Polars, XGBoost, and Plotly. <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
-  </footer>
+    <h2>Live Trading Status</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Checkpoint</th><th>Status</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CP-001</td><td class="status-pass">✅ PASSED</td><td>Signal parity: Python vs Go 100% match</td></tr>
+          <tr><td>CP-002</td><td class="status-pass">✅ PASSED</td><td>Feature extraction parity verified</td></tr>
+          <tr><td>CP-003</td><td class="status-pending">⏳ PENDING</td><td>Paper trading validation</td></tr>
+          <tr><td>CP-004</td><td class="status-pass">✅ PASSED</td><td>Risk limits active</td></tr>
+          <tr><td>CP-005</td><td class="status-pass">✅ PASSED</td><td>Go binary & ONNX model ready</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Quick Links</h2>
+    <div class="grid grid-3">
+      <a href="ppo-strategy.html" class="card link-card">
+        <h3>PPO Strategy Details</h3>
+        <p>Architecture, training, and deployment</p>
+      </a>
+      <a href="comparison.html" class="card link-card">
+        <h3>Strategy Comparison</h3>
+        <p>PPO vs XGBoost vs Buy & Hold</p>
+      </a>
+      <a href="parametric-study.html" class="card link-card">
+        <h3>Parametric Study</h3>
+        <p>Leverage × Position Size optimization</p>
+      </a>
+    </div>
+
+    <footer>
+      <p>Last updated: April 25, 2026 | Data: Binance BTCUSDT 2020-2025 | <a href="https://github.com/mgcha85/crypto-liquidation-map">GitHub</a></p>
+    </footer>
+  </div>
 </body>
 </html>

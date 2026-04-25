@@ -1,0 +1,3 @@
+[submodule "live_trading"]
+	path = live_trading
+	url = https://github.com/mgcha85/liquidation-map-live.git

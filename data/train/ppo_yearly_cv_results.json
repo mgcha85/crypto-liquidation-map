@@ -1,0 +1,87 @@
+[
+  {
+    "test_year": 2021,
+    "train_years": [
+      2020
+    ],
+    "train_samples": 8725,
+    "test_samples": 8747,
+    "ppo_return": 3.5555452870901196,
+    "buy_hold_return": 0.5939549158772525,
+    "alpha": 2.9615903712128673,
+    "sharpe": 8.171493428414378,
+    "max_drawdown": 0.003636756441214608,
+    "total_trades": 951,
+    "win_rate": 0.8107255520504731
+  },
+  {
+    "test_year": 2022,
+    "train_years": [
+      2020,
+      2021
+    ],
+    "train_samples": 17472,
+    "test_samples": 8760,
+    "ppo_return": 2.6259090124367424,
+    "buy_hold_return": -0.645439945404816,
+    "alpha": 3.271348957841558,
+    "sharpe": 8.061352548145932,
+    "max_drawdown": 0.0012047065626095872,
+    "total_trades": 1266,
+    "win_rate": 0.7187993680884676
+  },
+  {
+    "test_year": 2023,
+    "train_years": [
+      2020,
+      2021,
+      2022
+    ],
+    "train_samples": 26232,
+    "test_samples": 8759,
+    "ppo_return": 0.7367364381705658,
+    "buy_hold_return": 1.5580413886060644,
+    "alpha": -0.8213049504354987,
+    "sharpe": 6.747879706521041,
+    "max_drawdown": 0.001749521731143945,
+    "total_trades": 1014,
+    "win_rate": 0.6469428007889546
+  },
+  {
+    "test_year": 2024,
+    "train_years": [
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "train_samples": 34991,
+    "test_samples": 8784,
+    "ppo_return": 1.3007930580534184,
+    "buy_hold_return": 1.2030722376312029,
+    "alpha": 0.09772082042221553,
+    "sharpe": 6.9524419275514,
+    "max_drawdown": 0.0,
+    "total_trades": 1314,
+    "win_rate": 0.6811263318112634
+  },
+  {
+    "test_year": 2025,
+    "train_years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "train_samples": 43775,
+    "test_samples": 8760,
+    "ppo_return": 0.8990079296105343,
+    "buy_hold_return": -0.07153430562385156,
+    "alpha": 0.9705422352343859,
+    "sharpe": 6.653066359403112,
+    "max_drawdown": -3.133677987423642e-05,
+    "total_trades": 1208,
+    "win_rate": 0.6399006622516556
+  }
+]
