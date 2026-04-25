@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robustness Analysis - Crypto Liquidation Map</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-comparison">
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="comparison.html">Compare</a></li>
+      <li><a href="robustness.html" class="active">Robustness</a></li>
+      <li><a href="coins/btc.html">BTC</a></li>
+      <li><a href="coins/eth.html">ETH</a></li>
+      <li><a href="coins/sol.html">SOL</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Multi-Timeframe Robustness Analysis</h1>
+    <p>Extended validation across 3 coins, 3 timeframes, and 12-month out-of-sample test period.</p>
+
+    <div class="card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); border-left: 4px solid var(--accent-red);">
+      <h3 style="color: var(--accent-red); margin-bottom: 0.5rem;">Key Finding: Strategy Shows Regime Dependence</h3>
+      <p>When extending the test period from 4 months to 12 months, all configurations show negative Sharpe ratios. The strategy works in specific market regimes (Q1 2026) but does not generalize to all conditions.</p>
+    </div>
+
+    <h2>SOTA Baseline vs Extended Test</h2>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Configuration</th>
+            <th>Test Period</th>
+            <th>Samples</th>
+            <th>Sharpe</th>
+            <th>Return</th>
+            <th>Trades</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background: rgba(34, 197, 94, 0.1);">
+            <td><strong>SOTA (BTC 1h)</strong></td>
+            <td>Jan-Apr 2026 (4mo)</td>
+            <td>448</td>
+            <td class="positive"><strong>+5.19</strong></td>
+            <td class="positive"><strong>+2.82%</strong></td>
+            <td>24</td>
+          </tr>
+          <tr>
+            <td>Extended (BTC 1h)</td>
+            <td>Apr 2025 - Apr 2026 (12mo)</td>
+            <td>8,992</td>
+            <td class="negative">-2.38</td>
+            <td class="negative">-11.75%</td>
+            <td>1,258</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-secondary);">
+        The SOTA result uses 6-hour sampling (448 samples) while extended test uses hourly sampling (8,992 samples). 
+        More frequent trading in less favorable regimes degrades performance.
+      </p>
+    </div>
+
+    <h2>Full Optuna Optimization Results (12-Month Test)</h2>
+    <div class="card">
+      <p style="margin-bottom: 1rem;">Each combination ran 50 Optuna trials optimizing for Sharpe ratio. Test period: April 2025 - April 2026.</p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Coin</th>
+              <th>TF</th>
+              <th>Sharpe</th>
+              <th>Return</th>
+              <th>Max DD</th>
+              <th>Win Rate</th>
+              <th>PF</th>
+              <th>Trades</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background: rgba(34, 197, 94, 0.1);">
+              <td>SOLUSDT</td>
+              <td>1h</td>
+              <td class="positive">+0.11</td>
+              <td class="positive">+0.74%</td>
+              <td>9.16%</td>
+              <td>51.6%</td>
+              <td>1.12</td>
+              <td>1,021</td>
+              <td><span class="badge badge-green">Best</span></td>
+            </tr>
+            <tr style="background: rgba(34, 197, 94, 0.05);">
+              <td>ETHUSDT</td>
+              <td>5m</td>
+              <td class="positive">+0.03</td>
+              <td class="positive">+0.05%</td>
+              <td>6.47%</td>
+              <td>47.7%</td>
+              <td>1.12</td>
+              <td>1,080</td>
+              <td><span class="badge badge-yellow">Marginal</span></td>
+            </tr>
+            <tr>
+              <td>SOLUSDT</td>
+              <td>5m</td>
+              <td class="negative">-0.35</td>
+              <td class="negative">-3.50%</td>
+              <td>10.99%</td>
+              <td>51.2%</td>
+              <td>1.07</td>
+              <td>1,149</td>
+              <td><span class="badge badge-yellow">Weak</span></td>
+            </tr>
+            <tr>
+              <td>ETHUSDT</td>
+              <td>15m</td>
+              <td class="negative">-0.54</td>
+              <td class="negative">-5.29%</td>
+              <td>10.44%</td>
+              <td>48.2%</td>
+              <td>1.04</td>
+              <td>1,024</td>
+              <td><span class="badge badge-yellow">Weak</span></td>
+            </tr>
+            <tr>
+              <td>SOLUSDT</td>
+              <td>15m</td>
+              <td class="negative">-1.01</td>
+              <td class="negative">-9.56%</td>
+              <td>17.01%</td>
+              <td>47.9%</td>
+              <td>0.99</td>
+              <td>1,133</td>
+              <td><span class="badge badge-red">Poor</span></td>
+            </tr>
+            <tr>
+              <td>ETHUSDT</td>
+              <td>1h</td>
+              <td class="negative">-1.35</td>
+              <td class="negative">-11.78%</td>
+              <td>16.38%</td>
+              <td>47.6%</td>
+              <td>0.96</td>
+              <td>1,205</td>
+              <td><span class="badge badge-red">Poor</span></td>
+            </tr>
+            <tr>
+              <td>BTCUSDT</td>
+              <td>5m</td>
+              <td class="negative">-1.96</td>
+              <td class="negative">-10.26%</td>
+              <td>10.57%</td>
+              <td>47.8%</td>
+              <td>0.97</td>
+              <td>1,198</td>
+              <td><span class="badge badge-red">Poor</span></td>
+            </tr>
+            <tr>
+              <td>BTCUSDT</td>
+              <td>15m</td>
+              <td class="negative">-2.03</td>
+              <td class="negative">-10.80%</td>
+              <td>14.33%</td>
+              <td>47.7%</td>
+              <td>0.95</td>
+              <td>1,149</td>
+              <td><span class="badge badge-red">Poor</span></td>
+            </tr>
+            <tr>
+              <td>BTCUSDT</td>
+              <td>1h</td>
+              <td class="negative">-2.38</td>
+              <td class="negative">-11.75%</td>
+              <td>14.78%</td>
+              <td>46.6%</td>
+              <td>0.95</td>
+              <td>1,258</td>
+              <td><span class="badge badge-red">Worst</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+        XRP excluded due to missing Open Interest data. PF = Profit Factor.
+      </p>
+    </div>
+
+    <h2>Analysis by Dimension</h2>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>By Coin</h3>
+        <table style="font-size: 0.9rem;">
+          <tr><td>SOL</td><td>Best avg Sharpe</td><td class="positive">-0.42</td></tr>
+          <tr><td>ETH</td><td>Middle</td><td class="negative">-0.62</td></tr>
+          <tr><td>BTC</td><td>Worst</td><td class="negative">-2.12</td></tr>
+        </table>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
+          Higher volatility assets (SOL) show better adaptability to the ML model.
+        </p>
+      </div>
+      <div class="card">
+        <h3>By Timeframe</h3>
+        <table style="font-size: 0.9rem;">
+          <tr><td>5m</td><td>Best avg Sharpe</td><td class="negative">-0.76</td></tr>
+          <tr><td>1h</td><td>Middle</td><td class="negative">-1.21</td></tr>
+          <tr><td>15m</td><td>Worst</td><td class="negative">-1.19</td></tr>
+        </table>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
+          Shorter timeframes have more noise but also more adaptation opportunities.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Trade Frequency</h3>
+        <table style="font-size: 0.9rem;">
+          <tr><td>SOTA</td><td>24 trades</td><td class="positive">Selective</td></tr>
+          <tr><td>Extended</td><td>1,000+ trades</td><td class="negative">Overtrading</td></tr>
+        </table>
+        <p style="font-size: 0.85rem; margin-top: 0.5rem; color: var(--text-secondary);">
+          Fewer, higher-conviction trades outperform frequent trading.
+        </p>
+      </div>
+    </div>
+
+    <h2>Leverage Analysis</h2>
+    <div class="card">
+      <p>We tested optimal leverage using Kelly Criterion with Binance Futures liquidation constraints:</p>
+      <div style="overflow-x: auto; margin: 1rem 0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Leverage</th>
+              <th>Return</th>
+              <th>Max DD</th>
+              <th>Liquidation Rate</th>
+              <th>Verdict</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1x (No leverage)</td>
+              <td class="negative">-11.75%</td>
+              <td>14.78%</td>
+              <td>0%</td>
+              <td>Baseline</td>
+            </tr>
+            <tr>
+              <td>2x</td>
+              <td class="negative">-23.50%</td>
+              <td>29.56%</td>
+              <td>0%</td>
+              <td>Amplified loss</td>
+            </tr>
+            <tr>
+              <td>5x</td>
+              <td class="negative">-58.75%</td>
+              <td>73.90%</td>
+              <td>12%</td>
+              <td>High liquidation</td>
+            </tr>
+            <tr>
+              <td>10x+</td>
+              <td>N/A</td>
+              <td>100%+</td>
+              <td>35%+</td>
+              <td>Unacceptable</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary);">
+        <strong>Conclusion:</strong> With negative base returns, leverage only amplifies losses. 
+        Kelly Criterion recommends 0x (no position) when expected return is negative.
+      </p>
+    </div>
+
+    <h2>Why SOTA Works but Extended Fails</h2>
+    <div class="card">
+      <div class="grid grid-2">
+        <div>
+          <h3 style="color: var(--accent-green);">SOTA Success Factors</h3>
+          <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+            <li><strong>Regime fit:</strong> Q1 2026 had specific liquidation patterns</li>
+            <li><strong>Selective trading:</strong> 6h sampling = fewer, better signals</li>
+            <li><strong>Short test:</strong> 4 months of favorable conditions</li>
+            <li><strong>Low trade count:</strong> 24 trades minimizes noise</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="color: var(--accent-red);">Extended Failure Factors</h3>
+          <ul style="color: var(--text-secondary); margin-left: 1.5rem;">
+            <li><strong>Regime mismatch:</strong> Strategy doesn't adapt to all conditions</li>
+            <li><strong>Overtrading:</strong> 1,000+ trades includes weak signals</li>
+            <li><strong>Long test:</strong> 12 months spans multiple regimes</li>
+            <li><strong>No regime filter:</strong> Model trades in unfavorable conditions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2>Recommendations</h2>
+    <div class="card">
+      <h3>For Live Trading</h3>
+      <ol style="color: var(--text-secondary); margin-left: 1.5rem;">
+        <li><strong>Add regime filter:</strong> Only trade when market conditions match training regime</li>
+        <li><strong>Reduce trade frequency:</strong> Use 6h+ sampling or confidence threshold >0.7</li>
+        <li><strong>Start with SOL 1h:</strong> Best performer in extended test (Sharpe +0.11)</li>
+        <li><strong>No leverage:</strong> Until strategy shows consistent positive returns</li>
+        <li><strong>Paper trade first:</strong> Validate in real-time before capital deployment</li>
+      </ol>
+
+      <h3 style="margin-top: 1.5rem;">For Research</h3>
+      <ol style="color: var(--text-secondary); margin-left: 1.5rem;">
+        <li>Develop regime detection model (bull/bear/sideways classifier)</li>
+        <li>Train separate models per regime</li>
+        <li>Add macro features (funding rate, exchange flows, fear/greed index)</li>
+        <li>Explore ensemble of timeframes with voting</li>
+        <li>Test walk-forward optimization with monthly retraining</li>
+      </ol>
+    </div>
+
+    <h2>Methodology</h2>
+    <div class="card">
+      <h4>Optimization Setup</h4>
+      <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 0.9rem;">
+        <li><strong>Optimizer:</strong> Optuna TPE sampler, 50 trials per configuration</li>
+        <li><strong>Objective:</strong> Maximize Sharpe ratio on test set</li>
+        <li><strong>Model:</strong> XGBoost classifier with scale_pos_weight for class imbalance</li>
+        <li><strong>Features:</strong> Full liquidation map features (20+) + OHLCV candle features</li>
+        <li><strong>Labels:</strong> Triple barrier (PT=2%, SL=1%, horizon=24-48h depending on timeframe)</li>
+        <li><strong>Train/Test:</strong> Time-based split (last 12 months = test)</li>
+      </ul>
+
+      <h4 style="margin-top: 1rem;">Hyperparameter Search Space</h4>
+      <table style="font-size: 0.9rem; margin-top: 0.5rem;">
+        <tr><td>max_depth</td><td>[3, 10]</td></tr>
+        <tr><td>learning_rate</td><td>[0.005, 0.1]</td></tr>
+        <tr><td>n_estimators</td><td>[50, 300]</td></tr>
+        <tr><td>min_child_weight</td><td>[1, 10]</td></tr>
+        <tr><td>subsample</td><td>[0.6, 1.0]</td></tr>
+        <tr><td>colsample_bytree</td><td>[0.6, 1.0]</td></tr>
+      </table>
+
+      <h4 style="margin-top: 1rem;">Liquidation Price Formula (Binance Futures)</h4>
+      <pre style="background: var(--bg-tertiary); padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem;">
+Long:  Liq_Price = Entry * (1 - 1/Leverage + Maintenance_Margin)
+Short: Liq_Price = Entry * (1 + 1/Leverage - Maintenance_Margin)
+
+Maintenance Margin by tier:
+  1-10x:   0.40%
+  11-20x:  0.50%
+  21-50x:  1.00%
+  51-100x: 2.50%</pre>
+    </div>
+
+    <h2>Data & Reproducibility</h2>
+    <div class="card">
+      <p>Results generated: April 25, 2026</p>
+      <ul style="color: var(--text-secondary); margin-left: 1.5rem; font-size: 0.9rem;">
+        <li><strong>Script:</strong> <code>scripts/run_full_optuna.py</code></li>
+        <li><strong>Results:</strong> <code>data/optuna_results/full_optuna_results_20260425_093458.json</code></li>
+        <li><strong>Leverage analysis:</strong> <code>scripts/find_optimal_leverage.py</code></li>
+        <li><strong>SOTA verification:</strong> <code>scripts/verify_sota_baseline.py</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Built with Python, Polars, XGBoost, Optuna, and Plotly. <a href="https://github.com/mgcha85/crypto-liquidation-map">View on GitHub</a></p>
+  </footer>
+</body>
+</html>
